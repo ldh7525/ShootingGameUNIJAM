@@ -23,7 +23,6 @@ public class Bullet : MonoBehaviour
         // 화면 밖으로 나가면 풀로 반환
         if (Mathf.Abs(transform.position.x) > 20 || Mathf.Abs(transform.position.y) > 20)
         {
-            print("asdf");
             poolManager.ReturnBulletToPool(gameObject);
         }
     }
