@@ -3,8 +3,8 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 5f; // ÅºÈ¯ ¼Óµµ
-    private Vector2 direction;
-    private BulletPoolManager poolManager;
+    [SerializeField] private Vector2 direction;
+    [SerializeField] private BulletPoolManager poolManager;
 
     public void Initialize(BulletPoolManager manager)
     {
