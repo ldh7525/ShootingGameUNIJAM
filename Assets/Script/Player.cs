@@ -3,10 +3,11 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
+    [SerializeField] private Vector2 movement;
+    public float playerHealth;
 
     private Rigidbody2D rb;
     private Animator ani;
-    [SerializeField] private Vector2 movement;
     private SpriteRenderer spriteRenderer;
 
     void Start()
@@ -35,6 +36,15 @@ public class PlayerMovement : MonoBehaviour
     {
         // 물리 기반 이동 처리
         rb.velocity = movement.normalized * moveSpeed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Bullet"))
+        {
+            playerHealth--;
+            Destroy(collision.gameObject);
+        }
     }
 
     void MoveSpriteManager()
