@@ -2,13 +2,17 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private Vector2 movement;
+    public float playerHealth;
+
     private Rigidbody2D rb;
-    private Vector2 movement;
+    private Animator ani;
     private SpriteRenderer spriteRenderer;
 
     void Start()
     {
+        ani = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>(); // SpriteRenderer 가져오기
     }
@@ -18,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
         // 이동 입력 감지
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+
+        MoveSpriteManager();
 
         // 스프라이트 뒤집기
         if (movement.x > 0)
@@ -30,5 +36,38 @@ public class PlayerMovement : MonoBehaviour
     {
         // 물리 기반 이동 처리
         rb.velocity = movement.normalized * moveSpeed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Bullet"))
+        {
+            playerHealth--;
+            Destroy(collision.gameObject);
+        }
+    }
+
+    void MoveSpriteManager()
+    {
+
+        if (movement.x != 0 || movement.y != 0)
+            ani.SetBool("IsWalking", true);
+        else
+            ani.SetBool("IsWalking", false);
+
+        if (movement.x != 0)
+            ani.SetBool("Isleft", true);
+        else
+            ani.SetBool("Isleft", false);
+
+        if (movement.y > 0)
+            ani.SetBool("IsForward", true);
+        else if (movement.y <= 0)
+            ani.SetBool("IsForward", false);
+
+        if (movement.y < 0)
+            ani.SetBool("IsBackward", true);
+        else if (movement.y >= 0)
+            ani.SetBool("IsBackward", false);
     }
 }
