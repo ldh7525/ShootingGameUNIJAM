@@ -158,4 +158,16 @@ public class PhaseManager : MonoBehaviour
             Debug.LogError($"해당 패턴 메서드가 없습니다: Pattern{patternName}");
         }
     }
+
+    public List<string> GetCurrentPatternCombination()
+    {
+        switch (currentPhase)
+        {
+            case GamePhase.Phase1: return patternCombinationPhase1;
+            case GamePhase.Phase2: return patternCombinationPhase2;
+            case GamePhase.Phase3: return patternCombinationPhase3;
+            case GamePhase.Phase4: return patternCombinationPhase4;
+            default: return new List<string>();
+        }
+    }
 }
