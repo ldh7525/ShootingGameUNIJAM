@@ -5,19 +5,24 @@ using UnityEngine;
 public class AttackRotation : MonoBehaviour
 {
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private bool isRotate;
 
     // Start is called before the first frame update
     void Start()
     {
+
         StartCoroutine(RotationSpeedChange());
     }
 
     // Update is called once per frame
     void Update()
     {
-        float rotationAmount = rotationSpeed * Time.deltaTime;
+        if (isRotate)
+        {
+            float rotationAmount = rotationSpeed * Time.deltaTime;
 
-        transform.Rotate(0, 0, rotationAmount);
+            transform.Rotate(0, 0, rotationAmount);
+        }
     }
 
     IEnumerator RotationSpeedChange()
