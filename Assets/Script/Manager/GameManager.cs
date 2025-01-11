@@ -16,10 +16,11 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
-        if (player != null)
+        if (player != null && !isGameEnd)
         {
             if (player.GetComponent<PlayerMovement>().playerHealth <= 0)
             {
+                SoundManager.Instance.EffectSoundOn("GameOver");
                 //Time.timeScale = 0.0f;
                 isGameEnd = true;
             }
