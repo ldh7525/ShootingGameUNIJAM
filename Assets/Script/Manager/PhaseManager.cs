@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class PhaseManager : MonoBehaviour
@@ -14,19 +13,31 @@ public class PhaseManager : MonoBehaviour
         Phase4,
         Phase5
     }
+
     public GamePhase currentPhase;
-    [Header("ÆĞÅÏ Á¶Àı ÀÎ½ºÆåÅÍ")]
-    [Tooltip("1-2/2-3 ÀÌ·¸°Ô ÀÔ·ÂÇÏ¸é º¸½º1ÀÇ 2¹øÂ° ÆĞÅÏ, º¸½º2ÀÇ 3¹øÂ° ÆĞÅÏÀÌ µ¿½Ã¿¡ ½ÇÇà *°ø¹é µé¾î°¡¸é ¸ÁÇÔ*")]
+
+    [Header("íŒ¨í„´ ì¡°í•© ì¸ìŠ¤í™í„°")]
     [SerializeField] private List<string> patternCombinationPhase1;
-    [Tooltip("1-2/2-3 ÀÌ·¸°Ô ÀÔ·ÂÇÏ¸é º¸½º1ÀÇ 2¹øÂ° ÆĞÅÏ, º¸½º2ÀÇ 3¹øÂ° ÆĞÅÏÀÌ µ¿½Ã¿¡ ½ÇÇà *°ø¹é µé¾î°¡¸é ¸ÁÇÔ*")]
     [SerializeField] private List<string> patternCombinationPhase2;
-    [Tooltip("1-2/2-3 ÀÌ·¸°Ô ÀÔ·ÂÇÏ¸é º¸½º1ÀÇ 2¹øÂ° ÆĞÅÏ, º¸½º2ÀÇ 3¹øÂ° ÆĞÅÏÀÌ µ¿½Ã¿¡ ½ÇÇà *°ø¹é µé¾î°¡¸é ¸ÁÇÔ*")]
     [SerializeField] private List<string> patternCombinationPhase3;
-    [Tooltip("1-2/2-3 ÀÌ·¸°Ô ÀÔ·ÂÇÏ¸é º¸½º1ÀÇ 2¹øÂ° ÆĞÅÏ, º¸½º2ÀÇ 3¹øÂ° ÆĞÅÏÀÌ µ¿½Ã¿¡ ½ÇÇà *°ø¹é µé¾î°¡¸é ¸ÁÇÔ*")]
     [SerializeField] private List<string> patternCombinationPhase4;
 
-    [Space (10f)]
+    [Header("í˜ì´ì¦ˆ ì „í™˜ ëŒ€ê¸° ì‹œê°„")]
+    [SerializeField] private float phase1TransitionDelay;
+    [SerializeField] private float phase2TransitionDelay;
+    [SerializeField] private float phase3TransitionDelay;
+    [SerializeField] private float phase4TransitionDelay;
+
+    [Header("í˜ì´ì¦ˆ ëŒ€ì‚¬ ì¶œë ¥ ì„¤ì •")]
+    [SerializeField] private TypingEffect typingEffect;
+    [SerializeField] private string phase1Dialogue = "í˜ì´ì¦ˆ 1ì´ ì‹œì‘ë˜ì—ˆìŠµë‹ˆë‹¤.";
+    [SerializeField] private string phase2Dialogue = "í˜ì´ì¦ˆ 2ê°€ ì§„í–‰ë©ë‹ˆë‹¤.";
+    [SerializeField] private string phase3Dialogue = "í˜ì´ì¦ˆ 3ì´ í™œì„±í™”ë©ë‹ˆë‹¤.";
+    [SerializeField] private string phase4Dialogue = "ìµœì¢… í˜ì´ì¦ˆë¥¼ ì¤€ë¹„í•©ë‹ˆë‹¤.";
+
+    [Space(10f)]
     [SerializeField] private TextMeshProUGUI timeText;
+    private float timeFloat = 0f;
     [SerializeField] private GameManager gameManager;
 
     [SerializeField] private Boss1 Boss1;
@@ -39,35 +50,40 @@ public class PhaseManager : MonoBehaviour
         StartPhase(GamePhase.Phase1);
     }
 
+    private void Update()
+    {
+        timeFloat += Time.deltaTime;
+        timeText.text = timeFloat.ToString("F2");
+    }
+
     void StartPhase(GamePhase phase)
     {
         currentPhase = phase;
-        Debug.Log($"{phase} ½ÃÀÛ!");
+        Debug.Log($"{phase} ì‹œì‘!");
 
         switch (phase)
         {
             case GamePhase.Phase1:
-                StartCoroutine(PhaseRoutine(patternCombinationPhase1));
+                StartCoroutine(PhaseRoutine(patternCombinationPhase1, phase1TransitionDelay, phase1Dialogue));
                 break;
             case GamePhase.Phase2:
-                StartCoroutine(PhaseRoutine(patternCombinationPhase2));
+                StartCoroutine(PhaseRoutine(patternCombinationPhase2, phase2TransitionDelay, phase2Dialogue));
                 break;
             case GamePhase.Phase3:
-                StartCoroutine(PhaseRoutine(patternCombinationPhase3));
+                StartCoroutine(PhaseRoutine(patternCombinationPhase3, phase3TransitionDelay, phase3Dialogue));
                 break;
             case GamePhase.Phase4:
-                StartCoroutine(PhaseRoutine(patternCombinationPhase4)); // ¹İº¹ »ç¿ë ¿¹½Ã
+                StartCoroutine(PhaseRoutine(patternCombinationPhase4, phase4TransitionDelay, phase4Dialogue));
                 break;
             case GamePhase.Phase5:
                 break;
         }
     }
 
-    IEnumerator PhaseRoutine(List<string> patternCombination)
+    IEnumerator PhaseRoutine(List<string> patternCombination, float transitionDelay, string dialogue)
     {
         foreach (string pattern in patternCombination)
         {
-            // "/"·Î ÆĞÅÏ ±×·ìÀ» ³ª´©°í µ¿½Ã¿¡ ½ÇÇà
             string[] splitPatterns = pattern.Split('/');
             List<Coroutine> coroutines = new List<Coroutine>();
 
@@ -76,16 +92,21 @@ public class PhaseManager : MonoBehaviour
                 coroutines.Add(StartCoroutine(ExecutePattern(subPattern)));
             }
 
-            // ¸ğµç ÄÚ·çÆ¾ÀÌ ¿Ï·áµÉ ¶§±îÁö ´ë±â
             foreach (Coroutine coroutine in coroutines)
             {
                 yield return coroutine;
             }
         }
 
-        Debug.Log($"{currentPhase} ¿Ï·á!");
+        Debug.Log($"{currentPhase} ì™„ë£Œ!");
 
-        // ´ÙÀ½ ÆäÀÌÁî·Î ÀüÈ¯
+        // í˜ì´ì¦ˆ ëŒ€ì‚¬ ì¶œë ¥
+        yield return StartCoroutine(typingEffect.DisplayTypingEffect(dialogue));
+
+        // ì „í™˜ ëŒ€ê¸° ì‹œê°„
+        yield return new WaitForSeconds(transitionDelay);
+
+        // ë‹¤ìŒ í˜ì´ì¦ˆë¡œ ì „í™˜
         if (currentPhase < GamePhase.Phase5)
         {
             StartPhase(currentPhase + 1);
@@ -101,7 +122,7 @@ public class PhaseManager : MonoBehaviour
         string[] parts = pattern.Split('-');
         if (parts.Length != 2)
         {
-            Debug.LogError($"Àß¸øµÈ ÆĞÅÏ Çü½Ä: {pattern}");
+            Debug.LogError($"ì˜ëª»ëœ íŒ¨í„´ í˜•ì‹: {pattern}");
             yield break;
         }
 
@@ -110,7 +131,7 @@ public class PhaseManager : MonoBehaviour
 
         if (!int.TryParse(bossName, out int bossNumber))
         {
-            Debug.LogError($"Àß¸øµÈ º¸½º ÀÌ¸§: {bossName}");
+            Debug.LogError($"ì˜ëª»ëœ ë³´ìŠ¤ ì´ë¦„: {bossName}");
             yield break;
         }
 
@@ -129,7 +150,7 @@ public class PhaseManager : MonoBehaviour
                 yield return StartCoroutine(InvokeBossPattern(Boss4, patternName));
                 break;
             default:
-                Debug.LogError($"Àß¸øµÈ º¸½º ¹øÈ£: {bossNumber}");
+                Debug.LogError($"ì˜ëª»ëœ ë³´ìŠ¤ ë²ˆí˜¸: {bossNumber}");
                 break;
         }
     }
@@ -143,7 +164,19 @@ public class PhaseManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"ÇØ´ç ÆĞÅÏ ¸Ş¼­µå°¡ ¾ø½À´Ï´Ù: Pattern{patternName}");
+            Debug.LogError($"ë³´ìŠ¤ {boss}: Pattern{patternName} ë©”ì„œë“œê°€ ì—†ìŠµë‹ˆë‹¤.");
+        }
+    }
+
+    public List<string> GetCurrentPatternCombination()
+    {
+        switch (currentPhase)
+        {
+            case GamePhase.Phase1: return patternCombinationPhase1;
+            case GamePhase.Phase2: return patternCombinationPhase2;
+            case GamePhase.Phase3: return patternCombinationPhase3;
+            case GamePhase.Phase4: return patternCombinationPhase4;
+            default: return new List<string>();
         }
     }
 }

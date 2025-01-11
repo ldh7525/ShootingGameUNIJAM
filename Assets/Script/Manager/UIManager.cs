@@ -33,6 +33,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private bool isDialogueActive = false; // 대화창 활성화 여부
     [SerializeField] private bool isPaused = true;
 
+    private FadeController fade;
+
     private void Start()
     {
         if (dialoguePanel != null)
@@ -40,6 +42,7 @@ public class UIManager : MonoBehaviour
             dialogueText = dialoguePanel.GetComponentInChildren<TextMeshProUGUI>();
         }
         Time.timeScale = 1f;
+        fade = GetComponent<FadeController>();
     }
 
     void Update()
@@ -104,18 +107,30 @@ public class UIManager : MonoBehaviour
     }
     void IsOver()
     {
-        if (gameManager.GetComponent<GameManager>().isGameEnd)
+        if (gameManager.GetComponent<GameManager>().isGameEnd || gameManager.GetComponent<GameManager>().isGameClear)
         {
             Time.timeScale = 0f;
+            fade.StartFadeOut();
+            StartCoroutine(FadeTime());
+        }
+        
+    }
+
+    IEnumerator FadeTime()
+    {
+        yield return new WaitForSecondsRealtime(5f);
+
+        if (gameManager.GetComponent<GameManager>().isGameEnd)
+        {
             gameOverPanel.SetActive(true);
             gameOverText.text = "Game Over";
         }
         else if (gameManager.GetComponent<GameManager>().isGameClear)
         {
-            Time.timeScale = 0f;
             gameOverPanel.SetActive(true);
             gameOverText.text = "Game Clear";
         }
+        fade.StartFadeIn();
     }
     
 }
