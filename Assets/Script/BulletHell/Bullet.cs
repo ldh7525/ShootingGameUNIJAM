@@ -2,27 +2,21 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-
-    public float speed = 5f; // źȯ �ӵ�
-    [SerializeField] private Vector2 direction;
-    [SerializeField] private BulletPoolManager poolManager;
-
-    public void Initialize(BulletPoolManager manager)
-
     public float speed = 5f; // źȯ �ӵ�
     public int mode = 0;
     private Vector2 direction;
     private BulletPoolManager poolManager;
+
     private Vector2 perpendicularDirection;
     public float amplitude = 1f; // sin 경로의 진폭
     public float frequency = 1f; // sin 경로의 주기
     public Vector2 startPos;
     public float startTime;
-    
+
     // 이거 sin으로 움직이는 bullet object를 따로 만들어서 mode 분리해 주세요. 제가 unity를 잘 몰라서 sprite는 잘 못 만지겠어요.
     public void Initialize(BulletPoolManager manager, float speed, int mode)
-
     {
+        poolManager = manager; // PoolManager ���� ����
         poolManager = manager; // PoolManager ���� ����
         this.speed = speed; // źȯ �ӵ� ����
         this.mode = mode;
@@ -30,6 +24,7 @@ public class Bullet : MonoBehaviour
 
     public void SetDirection(Vector2 dir)
     {
+        direction = dir.normalized; // �̵� ���� ����
         direction = dir.normalized; // �̵� ���� ����
         this.perpendicularDirection = new Vector2(-direction.y, direction.x).normalized;
     }
@@ -41,11 +36,12 @@ public class Bullet : MonoBehaviour
 
     public void GetTime(float time)
     {
+        transform.Translate(direction * speed * Time.deltaTime);
         startTime = time;
     }
 
     void Update()
-    {   
+    {
         if (mode == 0) // move forward
         {
             transform.Translate(direction * speed * Time.deltaTime);
@@ -68,6 +64,7 @@ public class Bullet : MonoBehaviour
             transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
         }
 
+        // ȭ�� ������ ������ Ǯ�� ��ȯ
         // ȭ�� ������ ������ Ǯ�� ��ȯ
         if (Mathf.Abs(transform.position.x) > 20 || Mathf.Abs(transform.position.y) > 20)
         {
