@@ -7,9 +7,6 @@ public class Boss1 : MonoBehaviour
     public BulletPoolManager poolManager; // BulletPoolManager ����
     public Transform player;
 
-    
-
-
     [Header("Pattern1 var")]
     
     [SerializeField] private Transform[] pattern1BulletSpawner;
@@ -34,8 +31,6 @@ public class Boss1 : MonoBehaviour
     [SerializeField] private float pattern3Height;
     [SerializeField] private float pattern3Width;
     [SerializeField] private float pattern3RepeatCount;
-
-
 
     private Vector2 GetDirectionFromAngle(float angle)
     {

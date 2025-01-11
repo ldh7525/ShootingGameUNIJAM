@@ -47,6 +47,7 @@ public class PhaseManager : MonoBehaviour
 
     void Start()
     {
+
         StartPhase(GamePhase.Phase1);
     }
 
@@ -64,15 +65,19 @@ public class PhaseManager : MonoBehaviour
         switch (phase)
         {
             case GamePhase.Phase1:
+                Boss1.gameObject.SetActive(true);
                 StartCoroutine(PhaseRoutine(patternCombinationPhase1, phase1TransitionDelay, phase1Dialogue));
                 break;
             case GamePhase.Phase2:
+                Boss2.gameObject.SetActive(true);
                 StartCoroutine(PhaseRoutine(patternCombinationPhase2, phase2TransitionDelay, phase2Dialogue));
                 break;
             case GamePhase.Phase3:
+                Boss3.gameObject.SetActive(true);
                 StartCoroutine(PhaseRoutine(patternCombinationPhase3, phase3TransitionDelay, phase3Dialogue));
                 break;
             case GamePhase.Phase4:
+                Boss4.gameObject.SetActive(true);
                 StartCoroutine(PhaseRoutine(patternCombinationPhase4, phase4TransitionDelay, phase4Dialogue));
                 break;
             case GamePhase.Phase5:
