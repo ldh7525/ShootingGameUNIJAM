@@ -1,28 +1,35 @@
 using UnityEngine;
 using System.Collections;
 
-public class BulletHell : MonoBehaviour
+public class BulletShotEven : MonoBehaviour
 {
     public BulletPoolManager poolManager; // BulletPoolManager ����
-    public int bulletCount;          // �� ���� �߻��� �Ѿ� ��
-    public float spawnInterval;    // ź�� ��ü �߻� ����
-    public float bulletSpawnDelay; // �� �Ѿ� �߻� ����
+    public int bulletCount;          // number of bullets in one shot
+    public float spawnInterval;    // number of seconds between shots
+    public float speed; // speed of bullets
+    public Transform player; 
+    public float angleStepHalf; // angle between bullets
 
     void Start()
     {
         // ���� �ð� �������� ź�� �߻� ����
-        InvokeRepeating(nameof(StartCircularPattern), 0f, spawnInterval);
+        InvokeRepeating(nameof(StartPattern), 0f, spawnInterval);
     }
 
-    void StartCircularPattern()
+    void StartPattern()
     {
-        StartCoroutine(FireCircularPattern());
+        StartCoroutine(FireShotgunPattern());
     }
 
-    IEnumerator FireCircularPattern()
+    IEnumerator FireShotgunPattern()
     {
-        float angleStep = 360f / bulletCount; // �� �Ѿ� ������ ����
-        float angle = 0f;
+        // Calculate base direction towards the player
+        Vector2 direction = player.position - transform.position;
+        float baseAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        // Spread bullets in an even arc
+        float startAngle = baseAngle - angleStepHalf;
+        float angleIncrement = (angleStepHalf * 2) / (bulletCount - 1);
 
         for (int i = 0; i < bulletCount; i++)
         {
@@ -38,8 +45,9 @@ public class BulletHell : MonoBehaviour
             Bullet bulletComponent = bullet.GetComponent<Bullet>();
             if (bulletComponent != null)
             {
-                bulletComponent.Initialize(poolManager, 5f, 0); // �Ѿ� ���� �ʱ�ȭ
-                bulletComponent.SetDirection(GetDirectionFromAngle(angle)); // ?
+                bulletComponent.Initialize(poolManager, speed, 0); // �Ѿ� ���� �ʱ�ȭ
+                int angleOffset = i - bulletCount / 2;  // bulletCount is odd number
+                bulletComponent.SetDirection(GetDirectionFromAngle(startAngle + (i * angleIncrement))); // ?
             }
             else
             {
@@ -51,11 +59,13 @@ public class BulletHell : MonoBehaviour
             bullet.transform.rotation = Quaternion.identity; // �ʱ�ȭ
 
             // ���� ������ �̵�
-            angle += angleStep;
+            // angle += angleStep;
 
             // ���� �Ѿ� �߻���� ���
-            yield return new WaitForSeconds(bulletSpawnDelay);
+           // yield return new WaitForSeconds(bulletSpawnDelay);
+            
         }
+        yield return null;
     }
 
     // �����κ��� ���� ���͸� ����ϴ� �޼���
