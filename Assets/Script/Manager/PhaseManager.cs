@@ -47,7 +47,7 @@ public class PhaseManager : MonoBehaviour
 
     void Start()
     {
-        StartPhase(GamePhase.Phase3);
+        StartPhase(GamePhase.Phase1);
     }
 
     private void Update()
