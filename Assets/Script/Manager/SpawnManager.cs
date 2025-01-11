@@ -22,13 +22,13 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
-        InitializePhaseFlags();
+        //InitializePhaseFlags();
     }
 
     void Update()
     {
         // 현재 페이즈에 따라 보스 관리
-        HandlePhase(phaseManager.currentPhase);
+        //HandlePhase(phaseManager.currentPhase);
     }
 
     void InitializePhaseFlags()
