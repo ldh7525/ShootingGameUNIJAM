@@ -33,6 +33,8 @@ public class Boss3 : MonoBehaviour
     [SerializeField] private float pattern3BigBulletSpeed = 2f; // BigBullet의 이동 속도
     [SerializeField] private float pattern3RepeatCount;
     // 각도에서 방향 벡터를 계산하는 메서드
+
+
     private Vector2 GetDirectionFromAngle(float angle)
     {
         float dirX = Mathf.Cos(angle * Mathf.Deg2Rad);
