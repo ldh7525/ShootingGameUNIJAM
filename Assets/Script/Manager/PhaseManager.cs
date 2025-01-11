@@ -16,26 +16,26 @@ public class PhaseManager : MonoBehaviour
 
     public GamePhase currentPhase;
 
-    [Header("���� ���� �ν�����")]
+    [Header("패턴 조합 인스펙터")]
     [SerializeField] private List<string> patternCombinationPhase1;
     [SerializeField] private List<string> patternCombinationPhase2;
     [SerializeField] private List<string> patternCombinationPhase3;
     [SerializeField] private List<string> patternCombinationPhase4;
 
-    [Header("������ ��ȯ �ð� ����")]
+    [Header("페이즈 전환 대기 시간")]
     [SerializeField] private float phase1TransitionDelay;
     [SerializeField] private float phase2TransitionDelay;
     [SerializeField] private float phase3TransitionDelay;
     [SerializeField] private float phase4TransitionDelay;
 
-    [Header("��� ��� ���� ����")]
+    [Header("페이즈 대사 출력 설정")]
     [SerializeField] private TypingEffect typingEffect;
-    [SerializeField] private string phase1Dialogue = "������ 1�� ����Ǿ����ϴ�.";
-    [SerializeField] private string phase2Dialogue = "������ 2�� �Ѿ�ϴ�.";
-    [SerializeField] private string phase3Dialogue = "������ 3�� ���۵˴ϴ�.";
-    [SerializeField] private string phase4Dialogue = "���� ������ �غ� ���Դϴ�.";
+    [SerializeField] private string phase1Dialogue = "페이즈 1이 시작되었습니다.";
+    [SerializeField] private string phase2Dialogue = "페이즈 2가 진행됩니다.";
+    [SerializeField] private string phase3Dialogue = "페이즈 3이 활성화됩니다.";
+    [SerializeField] private string phase4Dialogue = "최종 페이즈를 준비합니다.";
 
-    [Space (10f)]
+    [Space(10f)]
     [SerializeField] private TextMeshProUGUI timeText;
     private float timeFloat = 0f;
     [SerializeField] private GameManager gameManager;
@@ -59,7 +59,7 @@ public class PhaseManager : MonoBehaviour
     void StartPhase(GamePhase phase)
     {
         currentPhase = phase;
-        Debug.Log($"{phase} ����!");
+        Debug.Log($"{phase} 시작!");
 
         switch (phase)
         {
@@ -98,15 +98,15 @@ public class PhaseManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"{currentPhase} �Ϸ�!");
+        Debug.Log($"{currentPhase} 완료!");
 
-        // ��� ���
+        // 페이즈 대사 출력
         yield return StartCoroutine(typingEffect.DisplayTypingEffect(dialogue));
 
-        // ��ȯ ������
+        // 전환 대기 시간
         yield return new WaitForSeconds(transitionDelay);
 
-        // ���� ������� ��ȯ
+        // 다음 페이즈로 전환
         if (currentPhase < GamePhase.Phase5)
         {
             StartPhase(currentPhase + 1);
@@ -122,7 +122,7 @@ public class PhaseManager : MonoBehaviour
         string[] parts = pattern.Split('-');
         if (parts.Length != 2)
         {
-            Debug.LogError($"�߸��� ���� ����: {pattern}");
+            Debug.LogError($"잘못된 패턴 형식: {pattern}");
             yield break;
         }
 
@@ -131,7 +131,7 @@ public class PhaseManager : MonoBehaviour
 
         if (!int.TryParse(bossName, out int bossNumber))
         {
-            Debug.LogError($"�߸��� ���� �̸�: {bossName}");
+            Debug.LogError($"잘못된 보스 이름: {bossName}");
             yield break;
         }
 
@@ -150,7 +150,7 @@ public class PhaseManager : MonoBehaviour
                 yield return StartCoroutine(InvokeBossPattern(Boss4, patternName));
                 break;
             default:
-                Debug.LogError($"�߸��� ���� ��ȣ: {bossNumber}");
+                Debug.LogError($"잘못된 보스 번호: {bossNumber}");
                 break;
         }
     }
@@ -164,7 +164,7 @@ public class PhaseManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"boss {boss}: Pattern{patternName}");
+            Debug.LogError($"보스 {boss}: Pattern{patternName} 메서드가 없습니다.");
         }
     }
 
