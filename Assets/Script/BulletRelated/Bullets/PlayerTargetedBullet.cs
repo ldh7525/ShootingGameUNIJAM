@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicBullet : MonoBehaviour
+public class PlayerTargetedBullet : MonoBehaviour
 {
     [SerializeField] private float range;
     [SerializeField] private float speed; 

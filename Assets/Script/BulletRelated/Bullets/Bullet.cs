@@ -17,7 +17,6 @@ public class Bullet : MonoBehaviour
     public void Initialize(BulletPoolManager manager, float speed, int mode)
     {
         poolManager = manager; // PoolManager ���� ����
-        poolManager = manager; // PoolManager ���� ����
         this.speed = speed; // źȯ �ӵ� ����
         this.mode = mode;
     }
