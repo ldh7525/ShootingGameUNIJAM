@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
         {
             if (player.GetComponent<PlayerMovement>().playerHealth <= 0)
             {
-                Time.timeScale = 0.0f;
+                //Time.timeScale = 0.0f;
                 isGameEnd = true;
             }
         }
