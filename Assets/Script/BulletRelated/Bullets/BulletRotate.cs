@@ -35,4 +35,10 @@ public class BulletRotate : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public void Init(float speed, float roSpeed)
+    {
+        this.speed = speed;
+        this.roSpeed = roSpeed;
+    }
 }

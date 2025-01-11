@@ -37,7 +37,7 @@ public class LaserBeam : MonoBehaviour
         UpdateCollider();
 
         // 일정 시간이 지나면 삭제
-        // Destroy(gameObject, duration);
+        Destroy(gameObject, duration);
     }
 
     void Update()

@@ -182,3 +182,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c37d2033d42589b42aa59a2ce4996f62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolManager: {fileID: 0}
+  player: {fileID: 0}
+  pattern1BulletSpawner: []
+  rotateBulletPrefab: {fileID: 2890520033606850585, guid: 1ab6cf254b4b9c1449d32b0a5ae4bc18, type: 3}
+  pattern1SpawnInterval: 0
+  pattern1BulletSpeed: 0
+  pattern1BulletRoSpeed: 0
+  pattern1RepeatCount: 0
+  pattern2BulletSpawner: []
+  laserManagerOb: {fileID: 0}
+  beamAngle: 5
+  initalWidth: 6
+  finalWidth: 5
+  distance: 6
+  duration: 6
+  expanstionTime: 6
+  warningTime: 6
+  pattern2SpawnInterval: 0.5
+  pattern2RepeatCount: 0

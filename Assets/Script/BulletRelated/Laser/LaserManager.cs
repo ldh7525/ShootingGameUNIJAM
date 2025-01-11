@@ -8,6 +8,7 @@ public class LaserManager : MonoBehaviour
 
     public Vector2 startPoint; // 시작 위치
     public float angle; // 각도
+
     public float distance; // 길이
     public float warningTime; // 경고 시간
     public float duration; // 지속 시간
@@ -15,7 +16,18 @@ public class LaserManager : MonoBehaviour
     public float initialWidth; // 초기 너비
     public float finalWidth; // 최종 너비
 
-    void Start()
+    public void Init(Vector2 startPoint, float angle, float distance, float warningTime, float duration, float expanstionTime, float initalWidth, float finalWidth)
+    {
+        this.startPoint = startPoint;
+        this.angle = angle;
+        this.distance = distance;
+        this.warningTime = warningTime;
+        this.duration = duration;
+        this.expansionTime = expanstionTime;
+        this.initialWidth = initalWidth;
+        this.finalWidth = finalWidth;
+    }
+    public void laserStart()
     {
         StartCoroutine(FireLaser());
     }
