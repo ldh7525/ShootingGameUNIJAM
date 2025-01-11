@@ -64,15 +64,15 @@ public class TypingEffect : MonoBehaviour
             // 종성이 있는 경우
             char 완성글자 = (char)(0xAC00 + 초성Index * 21 * 28 + 중성Index * 28 + 종성Index);
             tempText = prefix + 완성글자;
+            textDisplay.text = tempText;
         }
         else
         {
             // 종성이 없는 경우, 초중성 상태 그대로 유지
             tempText = prefix + 초중성;
+            textDisplay.text = tempText;
+            yield return new WaitForSeconds(0.1f); // 마지막 단계 대기 시간
         }
-
-        textDisplay.text = tempText;
-        yield return new WaitForSeconds(0.1f); // 마지막 단계 대기 시간
     }
 
     // 한글 여부 확인

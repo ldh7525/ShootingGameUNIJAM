@@ -18,7 +18,7 @@ public class BigBullet : MonoBehaviour
     public void OnTriggerExit2D(Collider2D other)
     {
         // 특정 Trigger Collider를 기준으로 처리
-        if (other.CompareTag("Ground")) // Trigger Zone에 태그 설정
+        if (other.CompareTag("BigBulletTrigger")) // Trigger Zone에 태그 설정
         {
             HandleTriggerExit();
         }
