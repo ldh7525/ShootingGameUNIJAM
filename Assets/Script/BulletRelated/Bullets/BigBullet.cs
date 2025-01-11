@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class BigBullet : MonoBehaviour
 {
@@ -7,14 +6,15 @@ public class BigBullet : MonoBehaviour
     public int bulletCount = 30; // 발사할 탄환의 개수
     public float spreadRadius = 1f; // 탄환이 퍼질 거리
     public float smallBulletSpeed = 5f; // 발사된 탄환의 속도
-    public float bigBulletSpeed = 2f; // 발사된 탄환의 속도
-
+    public float bigBulletSpeed = 2f; // BigBullet의 이동 속도
+    public BulletPoolManager poolManager; // BulletPoolManager 참조
 
     private void Update()
     {
+        // BigBullet move
         transform.Translate(Vector2.right * bigBulletSpeed * Time.deltaTime);
     }
-        
+
     public void OnTriggerExit2D(Collider2D other)
     {
         // 특정 Trigger Collider를 기준으로 처리
@@ -28,7 +28,7 @@ public class BigBullet : MonoBehaviour
     {
         Debug.Log($"Bullet {name} exited the trigger zone!");
         SpreadBullets(); // 탄환 발사
-        Destroy(gameObject); // BigBullet 파괴
+        Destroy(gameObject); // BigBullet 풀로 반환
     }
 
     void SpreadBullets()
@@ -42,17 +42,20 @@ public class BigBullet : MonoBehaviour
             // 탄환의 위치 계산 (BigBullet의 주변)
             Vector3 spawnPosition = transform.position + new Vector3(Mathf.Cos(radian), Mathf.Sin(radian), 0) * spreadRadius;
 
-            // 탄환 생성
-            GameObject bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity);
+            // 오브젝트 풀에서 탄환 가져오기
+            GameObject bullet = poolManager.bulletPool.Get();
+            bullet.transform.position = spawnPosition;
+            bullet.transform.rotation = Quaternion.identity;
 
             // 탄환의 방향 설정
             Vector2 direction = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian)).normalized;
 
-            // Rigidbody2D를 사용해 속도 적용
-            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            // 탄환 초기화
+            Bullet bulletComponent = bullet.GetComponent<Bullet>();
+            if (bulletComponent != null)
             {
-                rb.velocity = direction * smallBulletSpeed;
+                bulletComponent.SetDirection(direction);
+                bulletComponent.Initialize(poolManager, smallBulletSpeed, 0); // 속도 및 모드 설정
             }
         }
     }
