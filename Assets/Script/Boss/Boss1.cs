@@ -8,32 +8,35 @@ public class Boss1 : MonoBehaviour
     public Transform player;
 
     
-    public Transform[] pattern3BulletSpawner;
+
 
     [Header("Pattern1 var")]
     
-    public Transform[] pattern1BulletSpawner;
-    public float pattern1SpawnInterval;    // number of seconds between shots
-    public float pattern1BulletSpeed; // speed of bullets
-    public float repeatCount;
+    [SerializeField] private Transform[] pattern1BulletSpawner;
+    [SerializeField] private float pattern1SpawnInterval;    // number of seconds between shots
+    [SerializeField] private float pattern1BulletSpeed; // speed of bullets
+    [SerializeField] private float pattern1RepeatCount;
 
     [Header("Pattern2 var")]
-    public Transform[] pattern2BulletSpawner;
-    public int pattern2BulletCount;          // number of bullets in one shot
-    public float pattern2SpawnInterval;    // number of seconds between shots
-    public float pattern2BulletSpeed; // speed of bullets
-    public float pattern2AngleStep; // angle between bullets
+    [SerializeField] private Transform[] pattern2BulletSpawner;
+    [SerializeField] private int pattern2BulletCount;          // number of bullets in one shot
+    [SerializeField] private float pattern2SpawnInterval;    // number of seconds between shots
+    [SerializeField] private float pattern2BulletSpeed; // speed of bullets
+    [SerializeField] private float pattern2AngleStep; // angle between bullets
+    [SerializeField] private float pattern2RepeatCount;
+
 
     [Header("Pattern3 var")]
-    public int pattern3BulletCount;          // number of bullets in one shot
-    public float pattern3SpawnInterval;    // number of seconds between shots
-    public float pattern3BulletSpeed; // speed of bullets
-    public float pattern3Hight;
-    public float pattern3Width;
-    void Start()
-    {
-       
-    }
+    [SerializeField] private Transform[] pattern3BulletSpawner;
+    [SerializeField] private int pattern3BulletCount;          // number of bullets in one shot
+    [SerializeField] private float pattern3SpawnInterval;    // number of seconds between shots
+    [SerializeField] private float pattern3BulletSpeed; // speed of bullets
+    [SerializeField] private float pattern3Hight;
+    [SerializeField] private float pattern3Width;
+    [SerializeField] private float pattern3RepeatCount;
+
+
+
     private Vector2 GetDirectionFromAngle(float angle)
     {
         float dirX = Mathf.Cos(angle * Mathf.Deg2Rad);
@@ -43,7 +46,7 @@ public class Boss1 : MonoBehaviour
     public IEnumerator Pattern1()
     {
         int shootCount = 0;
-        while(shootCount < repeatCount)
+        while(shootCount < pattern1RepeatCount)
         {
             Vector2 direction = player.position - transform.position;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -80,7 +83,7 @@ public class Boss1 : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         int shootCount = 0;
-        while (shootCount < repeatCount)
+        while (shootCount < pattern2RepeatCount)
         {
             for (int i = 0; i < pattern2BulletCount; i++)
             {
@@ -117,6 +120,56 @@ public class Boss1 : MonoBehaviour
                 yield return null;
             }
             yield return new WaitForSeconds(pattern2SpawnInterval);
+            shootCount++;
+        }
+    }
+
+    public IEnumerator Pattern3()
+    {
+        Vector2 direction = player.position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        int shootCount = 0;
+        while (shootCount < pattern3RepeatCount)
+        {
+            for (int i = 0; i < pattern3BulletCount; i++)
+            {
+                // Ǯ���� �Ѿ� ��������
+                GameObject bullet = poolManager.bulletPool.Get();
+                if (bullet == null)
+                {
+                    Debug.LogWarning("źȯ�� Ǯ���� ������ �� �����ϴ�.");
+                    continue;
+                }
+
+                // �Ѿ� �ʱ�ȭ (BulletPoolManager�� ����)
+                Bullet bulletComponent = bullet.GetComponent<Bullet>();
+                if (bulletComponent != null)
+                {
+                    bulletComponent.Initialize(poolManager, pattern3BulletSpeed, 0); // �Ѿ� ���� �ʱ�ȭ
+                    bulletComponent.SetDirection(GetDirectionFromAngle(angle)); // ?
+                }
+                else
+                {
+                    Debug.LogWarning("Bullet ��ũ��Ʈ�� �Ѿ˿� ÷�εǾ� ���� �ʽ��ϴ�.");
+                }
+
+                // �Ѿ� ��ġ�� ���� ����
+                int offset = i - pattern3BulletCount / 2;
+                int offset_abs = -Mathf.Abs(offset);
+                Vector3 normDir = new Vector3(direction.x, direction.y, 0).normalized;
+                Vector3 perpDir = new Vector3(-direction.y, direction.x, 0).normalized;
+                bullet.transform.position = transform.position + (perpDir * offset * pattern3Width) + (normDir * offset_abs * pattern3Hight);
+                bullet.transform.rotation = Quaternion.identity; // �ʱ�ȭ
+
+                // ���� ������ �̵�
+                // angle += angleStep;
+
+                // ���� �Ѿ� �߻���� ���
+                // yield return new WaitForSeconds(bulletSpawnDelay);
+
+            }
+            yield return new WaitForSeconds(pattern3SpawnInterval);
             shootCount++;
         }
     }

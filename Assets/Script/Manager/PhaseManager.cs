@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -14,10 +15,9 @@ public class PhaseManager : MonoBehaviour
         Phase4,
         Phase5
     }
-    public GamePhase currentPhase = GamePhase.Phase1; // 초기 페이즈 설정
-    public float[] phaseTime = new float[5];  // Phase 시간 저장 배열
-    private int phaseIndex;
-    private float phaseTimer; // 페이즈 지속 시간 카운터
+    public GamePhase currentPhase; // 초기 페이즈 설정
+
+    [SerializeField] private string[] patternCombination;
 
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private GameManager gameManager;
@@ -29,6 +29,7 @@ public class PhaseManager : MonoBehaviour
 
     void Start()
     {
+        ParsingPattern();
         StartPhase(GamePhase.Phase1); // Phase 1 시작
     }
 
@@ -61,7 +62,7 @@ public class PhaseManager : MonoBehaviour
     IEnumerator Phase1Routine()
     {
         // Phase 1에서 실행할 작업
-        yield return StartCoroutine(Boss1.Pattern2()); // 예: 특정 작업을 대기
+        yield return StartCoroutine(Boss1.Pattern3()); // 예: 특정 작업을 대기
         Debug.Log("Phase 1 완료!");
 
         StartPhase(GamePhase.Phase2); // 다음 Phase로 전환
@@ -107,5 +108,13 @@ public class PhaseManager : MonoBehaviour
         Debug.Log("Phase 2: SomeTask 실행 중...");
         yield return new WaitForSeconds(1f); // 예: 작업 대기
         Debug.Log("Phase 2: SomeTask 완료!");
+    }
+
+    private void ParsingPattern()
+    {
+        for(int i = 0; i< patternCombination.Length; i++)
+        {
+            string[] parts = patternCombination[i].Split('-');
+        }
     }
 }
