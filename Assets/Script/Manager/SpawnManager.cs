@@ -90,20 +90,29 @@ public class SpawnManager : MonoBehaviour
                 ? bossSpawnPositions[bossName]
                 : Vector2.zero; // 기본값 (0,0)
 
-            // 부모 오브젝트 리스트에서 랜덤으로 선택
-            GameObject selectedParent = parent[Random.Range(0, parent.Count)];
+            // 'Rotation'이라는 이름의 GameObject를 Hierarchy에서 탐색
+            GameObject rotationParent = GameObject.Find("Rotation");
 
-            // 선택된 부모의 자식으로 생성
-            var newBoss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, selectedParent.transform);
+            // 'Rotation' GameObject가 존재하지 않을 경우
+            if (rotationParent == null)
+            {
+                Debug.LogError("'Rotation' GameObject를 찾을 수 없습니다. 생성이 중단됩니다.");
+                return;
+            }
+
+            // 'Rotation' GameObject의 자식으로 보스 프리팹 생성
+            var newBoss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, rotationParent.transform);
             newBoss.name = bossPrefab.name; // 생성된 보스 이름 동기화
             activeBosses.Add(newBoss);
-            Debug.Log($"{bossName} 보스가 {selectedParent.name}의 자식으로 생성되었습니다. 위치: {spawnPosition}");
+
+            Debug.Log($"{bossName} 보스가 'Rotation' GameObject의 자식으로 생성되었습니다. 위치: {spawnPosition}");
         }
         else
         {
-            Debug.LogError($"보스 프리팹 '{bossName}'을 찾을 수 없습니다.");
+            Debug.LogError($"보스 프리팹 '{bossName}'을(를) 찾을 수 없습니다.");
         }
     }
+
 
     void DestroyInactiveBosses(string activeBossName)
     {
