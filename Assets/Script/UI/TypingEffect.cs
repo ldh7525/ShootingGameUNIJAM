@@ -35,7 +35,7 @@ public class TypingEffect : MonoBehaviour
             {
                 displayedText += c; // 비한글 문자 추가
                 textDisplay.text = displayedText;
-                yield return new WaitForSeconds(0.1f); // 대기 시간
+                yield return new WaitForSeconds(0.05f); // 대기 시간
             }
         }
         isTypingComplete = true;
@@ -76,7 +76,7 @@ public class TypingEffect : MonoBehaviour
             textDisplay.text = tempText;
         }
 
-        yield return new WaitForSeconds(0.1f); // 마지막 단계 대기 시간
+        yield return new WaitForSeconds(0.05f); // 마지막 단계 대기 시간
     }
 
     // 한글 여부 확인

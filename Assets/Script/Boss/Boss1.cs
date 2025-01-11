@@ -32,6 +32,21 @@ public class Boss1 : MonoBehaviour
     [SerializeField] private float pattern3Width;
     [SerializeField] private float pattern3RepeatCount;
 
+    [Header("Pattern4 var")]
+
+    [SerializeField] private Transform[] pattern4BulletSpawner;
+    [SerializeField] private float pattern4SpawnInterval;    // number of seconds between shots
+    [SerializeField] private float pattern4BulletSpeed; // speed of bullets
+    [SerializeField] private float pattern4RepeatCount;
+
+    [Tooltip("샷건 너프 버전")]
+    [Header("Pattern5 var")]
+    [SerializeField] private Transform[] pattern5BulletSpawner;
+    [SerializeField] private int pattern5BulletCount;          // number of bullets in one shot
+    [SerializeField] private float pattern5SpawnInterval;    // number of seconds between shots
+    [SerializeField] private float pattern5BulletSpeed; // speed of bullets
+    [SerializeField] private float pattern5AngleStep; // angle between bullets
+    [SerializeField] private float pattern5RepeatCount;
     private Vector2 GetDirectionFromAngle(float angle)
     {
         float dirX = Mathf.Cos(angle * Mathf.Deg2Rad);
@@ -166,6 +181,87 @@ public class Boss1 : MonoBehaviour
 
             }
             yield return new WaitForSeconds(pattern3SpawnInterval);
+            shootCount++;
+        }
+    }
+
+    public IEnumerator Pattern4()
+    {
+        int shootCount = 0;
+        while (shootCount < pattern4RepeatCount)
+        {
+            Vector2 direction = player.position - transform.position;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            GameObject bullet = poolManager.bulletPool.Get();
+            if (bullet == null)
+            {
+                Debug.LogWarning("źȯ�� Ǯ���� ������ �� �����ϴ�.");
+                yield return null;
+            }
+
+            Bullet bulletComponent = bullet.GetComponent<Bullet>();
+            if (bulletComponent != null)
+            {
+                bulletComponent.Initialize(poolManager, pattern4BulletSpeed, 0);
+                bulletComponent.SetDirection(GetDirectionFromAngle(angle)); // ?
+            }
+            else
+            {
+                Debug.LogWarning("Bullet ��ũ��Ʈ�� �Ѿ˿� ÷�εǾ� ���� �ʽ��ϴ�.");
+            }
+
+            bullet.transform.position = transform.position;
+            bullet.transform.rotation = Quaternion.identity;
+
+            yield return new WaitForSeconds(pattern4SpawnInterval);
+            shootCount++;
+        }
+    }
+    public IEnumerator Pattern5()
+    {
+
+
+        int shootCount = 0;
+        while (shootCount < pattern5RepeatCount)
+        {
+            Vector2 direction = player.position - transform.position;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            for (int i = 0; i < pattern5BulletCount; i++)
+            {
+                // Ǯ���� �Ѿ� ��������
+                GameObject bullet = poolManager.bulletPool.Get();
+                if (bullet == null)
+                {
+                    Debug.LogWarning("źȯ�� Ǯ���� ������ �� �����ϴ�.");
+                    continue;
+                }
+
+                // �Ѿ� �ʱ�ȭ (BulletPoolManager�� ����)
+                Bullet bulletComponent = bullet.GetComponent<Bullet>();
+                if (bulletComponent != null)
+                {
+                    bulletComponent.Initialize(poolManager, pattern5BulletSpeed, 0); // �Ѿ� ���� �ʱ�ȭ
+                    int angleOffset = i - pattern5BulletCount / 2;  // bulletCount is odd number
+                    bulletComponent.SetDirection(GetDirectionFromAngle(angle + pattern5AngleStep * angleOffset)); // ?
+                }
+                else
+                {
+                    Debug.LogWarning("Bullet ��ũ��Ʈ�� �Ѿ˿� ÷�εǾ� ���� �ʽ��ϴ�.");
+                }
+
+                // �Ѿ� ��ġ�� ���� ����
+                bullet.transform.position = transform.position;
+                bullet.transform.rotation = Quaternion.identity; // �ʱ�ȭ
+
+                // ���� ������ �̵�
+                // angle += angleStep;
+
+                // ���� �Ѿ� �߻���� ���
+                // yield return new WaitForSeconds(bulletSpawnDelay);
+                yield return null;
+            }
+            yield return new WaitForSeconds(pattern5SpawnInterval);
             shootCount++;
         }
     }
