@@ -14,7 +14,7 @@ public class TypingEffect : MonoBehaviour
     void Start()
     {
         // 예제 텍스트 설정
-        string text = "안녕하세요! 유니티에서 텍스트를 출력합니다.";
+        string text = "";
         StartCoroutine(DisplayTypingEffect(text));
     }
 

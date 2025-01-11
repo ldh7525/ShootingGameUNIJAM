@@ -7,7 +7,6 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> bosses; // 생성 가능한 보스 프리팹 리스트
     [SerializeField] private List<GameObject> activeBosses; // 활성화된 보스 객체 리스트
-    [SerializeField] private List<GameObject> parent; // 부모 오브젝트 리스트
     [SerializeField] private PhaseManager phaseManager; // PhaseManager 참조
 
     private Dictionary<GamePhase, bool> phaseFlags; // 페이즈별 상태 플래그

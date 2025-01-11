@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8363704444317731144}
   - component: {fileID: 2156096587212956327}
   m_Layer: 0
-  m_Name: Boss3
+  m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
