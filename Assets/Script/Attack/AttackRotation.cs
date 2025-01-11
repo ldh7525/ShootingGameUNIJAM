@@ -22,7 +22,10 @@ public class AttackRotation : MonoBehaviour
 
     IEnumerator RotationSpeedChange()
     {
-        rotationSpeed = Random.Range(-20, 20);
+        while (Mathf.Abs(rotationSpeed) < 10)
+        {
+            rotationSpeed = Random.Range(-20, 20);
+        }
         yield return new WaitForSeconds(5.0f);
     }
 }
