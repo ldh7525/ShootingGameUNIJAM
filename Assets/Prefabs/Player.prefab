@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6162482655264822583
 Transform:
   m_ObjectHideFlags: 0
@@ -77,12 +77,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1561725340, guid: 999d6bd0edb95074f8c07eabc45361cb, type: 3}
+  m_Sprite: {fileID: 1247902091, guid: 0fa5f0bbdc0a2f74788417bb6a9caf63, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.32, y: 0.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -100,14 +100,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64a67874a2910f54399e350e73a6b09d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
   movement: {x: 0, y: 0}
   playerHealth: 3
+  moveSpeed: 2
+  sprintSpeed: 0
+  currentSpeed: 0
+  stamina: 0
+  maxStamina: 0
+  rb: {fileID: 0}
+  ani: {fileID: 0}
+  spriteRenderer: {fileID: 0}
   boostMultiplier: 5
   boostDuration: 0.1
   walkableLayer:
     serializedVersion: 2
     m_Bits: 8
+  invincibleTime: 0
 --- !u!50 &4667575616725732745
 Rigidbody2D:
   serializedVersion: 4
