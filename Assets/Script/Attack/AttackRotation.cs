@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class AttackRotation : MonoBehaviour
 {
-    [SerializeField] private float rotationSpeed;
+    [SerializeField] private static float rotationSpeed; // static 변수로 선언
     [SerializeField] private bool isRotate;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(RotationSpeedChange());
+        if (rotationSpeed == 0) // 처음 한 번만 코루틴 실행
+        {
+            StartCoroutine(RotationSpeedChange());
+        }
     }
 
     // Update is called once per frame
@@ -26,10 +29,10 @@ public class AttackRotation : MonoBehaviour
 
     IEnumerator RotationSpeedChange()
     {
-        while (Mathf.Abs(rotationSpeed) < 10)
+        while (true)
         {
-            rotationSpeed = Random.Range(-20, 20);
+            rotationSpeed = Random.Range(-20, 20); // 모든 오브젝트가 공유하는 값
+            yield return new WaitForSeconds(5.0f);
         }
-        yield return new WaitForSeconds(5.0f);
     }
 }

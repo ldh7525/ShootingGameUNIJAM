@@ -5,119 +5,139 @@ using static PhaseManager;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> attackers;
-    [SerializeField] private GameObject attacker;
-    [SerializeField] private List<GameObject> parent;
-    [SerializeField] private PhaseManager phaseManager;
+    [SerializeField] private List<GameObject> bosses; // 생성 가능한 보스 프리팹 리스트
+    [SerializeField] private List<GameObject> activeBosses; // 활성화된 보스 객체 리스트
+    [SerializeField] private PhaseManager phaseManager; // PhaseManager 참조
 
-    private bool phase1Changed = true;
-    private bool phase2Changed = true;
-    private bool phase3Changed = true;
-    private bool phase4Changed = true;
+    private Dictionary<GamePhase, bool> phaseFlags; // 페이즈별 상태 플래그
+
+    // 보스 이름별 위치를 저장하는 Dictionary
+    private readonly Dictionary<string, Vector2> bossSpawnPositions = new Dictionary<string, Vector2>
+    {
+        { "Boss1", new Vector2(0, -4) },
+        { "Boss2", new Vector2(4, 0) },
+        { "Boss3", new Vector2(-4, 0) },
+        { "Boss4", new Vector2(0, 4) }
+    };
+
+    void Start()
+    {
+        InitializePhaseFlags();
+    }
 
     void Update()
     {
-        switch (phaseManager.currentPhase)
-        {
-            case GamePhase.Phase1:
-                p1();
-                break;
-            case GamePhase.Phase2:
-                p2();
-                break;
-            case GamePhase.Phase3:
-                p3();
-                break;
-            case GamePhase.Phase4:
-                p4();
-                break;
-            case GamePhase.Phase5:
-                p5();
-                break;
-        }
+        // 현재 페이즈에 따라 보스 관리
+        HandlePhase(phaseManager.currentPhase);
     }
 
-    void p1()
+    void InitializePhaseFlags()
     {
-        if (phase1Changed)
+        phaseFlags = new Dictionary<GamePhase, bool>
         {
-            attackers.Clear();
-            var a = Instantiate(attacker, new Vector2(4, 0), Quaternion.identity, parent[Random.Range(0,parent.Count)].transform);
-            attackers.Add(a);
-            a.transform.rotation = Quaternion.identity;
-            phase1Changed = false;
-        }
+            { GamePhase.Phase1, true },
+            { GamePhase.Phase2, true },
+            { GamePhase.Phase3, true },
+            { GamePhase.Phase4, true },
+            { GamePhase.Phase5, true }
+        };
     }
 
-    void p2()
+    void HandlePhase(GamePhase phase)
     {
-        if (phase2Changed)
+        // 이미 처리된 페이즈라면 무시
+        if (!phaseFlags[phase])
+            return;
+
+        // 현재 페이즈에 해당하는 보스를 관리
+        ManageBossesForPhase(phase);
+
+        // 플래그 업데이트
+        phaseFlags[phase] = false;
+    }
+
+    void ManageBossesForPhase(GamePhase phase)
+    {
+        // PhaseManager에서 현재 실행 중인 패턴 추출
+        string bossName = GetCurrentBossName(phaseManager);
+
+        if (string.IsNullOrEmpty(bossName))
         {
-            for (int i = 0; i < attackers.Count; i++)
+            Debug.LogError("Boss name is invalid.");
+            return;
+        }
+
+        // 보스 스폰
+        SpawnBoss(bossName);
+
+        // 보스 삭제
+        DestroyInactiveBosses(bossName);
+    }
+
+    void SpawnBoss(string bossName)
+    {
+        // `bossName`에 해당하는 보스가 이미 활성화되어 있다면 무시
+        if (activeBosses.Exists(boss => boss.name == bossName))
+            return;
+
+        // 해당 이름의 보스 프리팹을 찾아 스폰
+        GameObject bossPrefab = bosses.Find(boss => boss.name == bossName);
+        if (bossPrefab != null)
+        {
+            // 보스 위치 설정
+            Vector2 spawnPosition = bossSpawnPositions.ContainsKey(bossName)
+                ? bossSpawnPositions[bossName]
+                : Vector2.zero; // 기본값 (0,0)
+
+            // 'Rotation'이라는 이름의 GameObject를 Hierarchy에서 탐색
+            GameObject rotationParent = GameObject.Find("Rotation");
+
+            // 'Rotation' GameObject가 존재하지 않을 경우
+            if (rotationParent == null)
             {
-                Destroy(attackers[i].gameObject);
+                Debug.LogError("'Rotation' GameObject를 찾을 수 없습니다. 생성이 중단됩니다.");
+                return;
             }
-            attackers.Clear();
-            var a = Instantiate(attacker, new Vector2(4, 0), Quaternion.identity, parent[Random.Range(0, parent.Count)].transform);
-            attackers.Add(a);
-            a.transform.rotation = Quaternion.identity;
-            phase2Changed = false;
-        }
-    }
 
-    void p3()
-    {
-        if (phase3Changed)
+            // 'Rotation' GameObject의 자식으로 보스 프리팹 생성
+            var newBoss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity, rotationParent.transform);
+            newBoss.name = bossPrefab.name; // 생성된 보스 이름 동기화
+            activeBosses.Add(newBoss);
+
+            Debug.Log($"{bossName} 보스가 'Rotation' GameObject의 자식으로 생성되었습니다. 위치: {spawnPosition}");
+        }
+        else
         {
-            for (int i = 0; i < attackers.Count; i++)
-            {
-                Destroy(attackers[i].gameObject);
-            }
-            attackers.Clear();
-            var a = Instantiate(attacker, new Vector2(4, 0), Quaternion.identity, parent[Random.Range(0, parent.Count)].transform);
-            attackers.Add(a);
-            a.transform.rotation = Quaternion.identity;
-            phase3Changed = false;
+            Debug.LogError($"보스 프리팹 '{bossName}'을(를) 찾을 수 없습니다.");
         }
     }
 
-    void p4()
+
+    void DestroyInactiveBosses(string activeBossName)
     {
-        if (phase4Changed)
+        // 활성화된 보스 중 현재 활성 보스가 아닌 보스 제거
+        for (int i = activeBosses.Count - 1; i >= 0; i--)
         {
-            for (int i = 0; i < attackers.Count; i++)
+            if (activeBosses[i].name != activeBossName)
             {
-                Destroy(attackers[i].gameObject);
+                Debug.Log($"비활성화된 보스 {activeBosses[i].name} 제거됨.");
+                Destroy(activeBosses[i]);
+                activeBosses.RemoveAt(i);
             }
-            attackers.Clear();
-            var a = Instantiate(attacker, new Vector2(4, 0), Quaternion.identity, parent[Random.Range(0, parent.Count)].transform);
-            attackers.Add(a);
-            a.transform.rotation = Quaternion.identity;
-            phase4Changed = false;
         }
     }
 
-    void p5()
+    string GetCurrentBossName(PhaseManager phaseManager)
     {
-        if (phase4Changed)
+        // 현재 실행 중인 패턴에서 bossName 추출
+        foreach (string pattern in phaseManager.GetCurrentPatternCombination())
         {
-            for (int i = 0; i < attackers.Count; i++)
+            string[] parts = pattern.Split('-');
+            if (parts.Length > 0)
             {
-                Destroy(attackers[i].gameObject);
+                return parts[0].Trim(); // bossName 반환
             }
-            attackers.Clear();
-            var a = Instantiate(attacker, new Vector2(4, 0), Quaternion.identity, parent[Random.Range(0, parent.Count)].transform);
-            attackers.Add(a);
-            a.transform.rotation = Quaternion.identity;
-            phase4Changed = false;
         }
-    }
-
-    public void ResetPhaseFlags()
-    {
-        phase1Changed = true;
-        phase2Changed = true;
-        phase3Changed = true;
-        phase4Changed = true;
+        return string.Empty;
     }
 }
