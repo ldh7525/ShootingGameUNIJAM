@@ -30,10 +30,10 @@ public class PhaseManager : MonoBehaviour
 
     [Header("페이즈 대사 출력 설정")]
     [SerializeField] private TypingEffect typingEffect;
-    [SerializeField] private string phase1Dialogue = "페이즈 1이 시작되었습니다.";
-    [SerializeField] private string phase2Dialogue = "페이즈 2가 진행됩니다.";
+    [SerializeField] private string phase1Dialogue = "나랑 세계 최고의 보물을 훔치기로 했잖아!";
+    [SerializeField] private string phase2Dialogue = "잡히면 나랑 결혼하는거다?";
     [SerializeField] private string phase3Dialogue = "페이즈 3이 활성화됩니다.";
-    [SerializeField] private string phase4Dialogue = "최종 페이즈를 준비합니다.";
+    [SerializeField] private string phase4Dialogue = "지금 뭐하고 계시는 건가요?";
 
     [Space(10f)]
     [SerializeField] private TextMeshProUGUI timeText;
@@ -87,6 +87,9 @@ public class PhaseManager : MonoBehaviour
 
     IEnumerator PhaseRoutine(List<string> patternCombination, float transitionDelay, string dialogue)
     {
+        // 페이즈 대사 출력
+        yield return StartCoroutine(typingEffect.DisplayTypingEffect(dialogue));
+
         foreach (string pattern in patternCombination)
         {
             string[] splitPatterns = pattern.Split('/');
@@ -105,8 +108,6 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log($"{currentPhase} 완료!");
 
-        // 페이즈 대사 출력
-        yield return StartCoroutine(typingEffect.DisplayTypingEffect(dialogue));
 
         // 전환 대기 시간
         yield return new WaitForSeconds(transitionDelay);

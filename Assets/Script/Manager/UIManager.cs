@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("시작 스크립트용")]
     [SerializeField] private GameObject StartPanel;
+    [SerializeField] private GameObject StartText;
     // On on Start
     [Header ("스테이지 시작시 항상 활성화")]
     [SerializeField] private GameObject StartButton;
@@ -78,6 +79,7 @@ public class UIManager : MonoBehaviour
         isOpening = true;
         StartButton.SetActive(false);
         StartPanel.SetActive(true);
+        StartText.SetActive(true);
         StartCoroutine(te.DisplayTypingEffect(openingScript));
     }
 
