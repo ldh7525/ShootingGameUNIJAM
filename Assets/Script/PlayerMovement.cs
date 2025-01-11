@@ -118,6 +118,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator ApplyBoost()
     {
         isBoosting = true;
+        isInvincible = true;
         float originalSpeed = currentSpeed;
         currentSpeed *= boostMultiplier;
 
@@ -125,6 +126,7 @@ public class PlayerMovement : MonoBehaviour
 
         currentSpeed = originalSpeed;
         isBoosting = false;
+        isInvincible = false;
     }
 
     IEnumerator BecomeInvincible()
@@ -179,6 +181,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.CompareTag("Bullet") && !isInvincible) // 무적 상태가 아닐 때만 피해를 받음
         {
             playerHealth--;
+            SoundManager.Instance.EffectSoundOn("GetHurt");
             StartCoroutine(BecomeInvincible()); // 무적 상태 활성화
             Destroy(collision.gameObject);
             hit.TriggerShake();
