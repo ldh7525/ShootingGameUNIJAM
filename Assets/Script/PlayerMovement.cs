@@ -40,8 +40,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (IsOnWalkableSurface())
-        {
             movement.x = Input.GetAxisRaw("Horizontal");
             movement.y = Input.GetAxisRaw("Vertical");
 
@@ -56,12 +54,6 @@ public class PlayerMovement : MonoBehaviour
                 else if (movement.x < 0)
                     spriteRenderer.flipX = true;  // Facing left
             }
-        }
-        else
-        {
-            movement = Vector2.zero;
-            transform.position = Vector2.zero;
-        }
     }
 
     void FixedUpdate()
@@ -131,10 +123,5 @@ public class PlayerMovement : MonoBehaviour
 
         currentSpeed = originalSpeed;
         isBoosting = false;
-    }
-    bool IsOnWalkableSurface()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, walkableLayer);
-        return hit.collider != null;
     }
 }
