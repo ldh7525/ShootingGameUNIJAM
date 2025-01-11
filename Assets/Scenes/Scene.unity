@@ -747,7 +747,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: f2830af7e6d7ef64eba1580b6ef5a1cc, type: 3}
-  m_Color: {r: 0.19490923, g: 0.5660378, b: 0.19490923, a: 0.9411765}
+  m_Color: {r: 0.06642212, g: 0.066871196, b: 0.07169801, a: 0.9411765}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3763,6 +3763,18 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
+      propertyPath: pattern3BulletCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
+      propertyPath: pattern3BulletSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
+      propertyPath: pattern3RepeatCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
       propertyPath: pattern1AngleStepHalf
       value: 16
       objectReference: {fileID: 0}
@@ -3779,11 +3791,27 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
+      propertyPath: pattern3AngleStepHalf
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
+      propertyPath: pattern3SpawnInterval
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
       propertyPath: pattern1BulletSpawner.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
+      propertyPath: pattern3BulletSpawner.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
       propertyPath: pattern1BulletSpawner.Array.data[0]
+      value: 
+      objectReference: {fileID: 1915489042}
+    - target: {fileID: 2038928692617734759, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
+      propertyPath: pattern3BulletSpawner.Array.data[0]
       value: 
       objectReference: {fileID: 1915489042}
     - target: {fileID: 6571906057863933236, guid: b1ef28f72f412354f943a3a3ae57e82a, type: 3}
@@ -4374,21 +4402,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62415fdc0cb8b1840b1a9ed2b4ebd13b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPhase: 1
+  currentPhase: 0
   patternCombinationPhase1:
   - 1-1
   - 1-3
   - 1-2
-  - 1-3/1-1
   - 1-4
+  - 1-3/1-1
   - 1-2/1-1
   patternCombinationPhase2:
-  - 2-1/1-3
   - 2-2
+  - 2-1
   - 2-2/1-1
-  - 2-1/1-3
-  - 2-2
-  - 2-2
+  - 1-4
+  - 2-3/1-1
+  - 2-3/1-5
   patternCombinationPhase3:
   - 3-1
   patternCombinationPhase4:
@@ -4563,6 +4591,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1063760691}
     - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern3Width
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern3Height
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern5AngleStep
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
       propertyPath: pattern2BulletSpeed
       value: 2
       objectReference: {fileID: 0}
@@ -4570,6 +4610,34 @@ PrefabInstance:
       propertyPath: pattern2RepeatCount
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern4BulletSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern5BulletCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern5BulletSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern5RepeatCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern5SpawnInterval
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern5BulletSpawner.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028620294893108505, guid: 3a365ee04d4e2f04e9890ae5a2b1f1e7, type: 3}
+      propertyPath: pattern5BulletSpawner.Array.data[0]
+      value: 
+      objectReference: {fileID: 1220633350}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
