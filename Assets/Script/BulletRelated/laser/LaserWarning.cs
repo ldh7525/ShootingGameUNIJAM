@@ -23,8 +23,12 @@ public class LaserWarning : MonoBehaviour
         warningLine.startWidth = width; // 레이저 시작 두께
         warningLine.endWidth = width;   // 레이저 끝 두께
         warningLine.material = new Material(Shader.Find("Sprites/Default"));
-        warningLine.startColor = Color.red;
-        warningLine.endColor = Color.red;
+        Color startColor = new Color(1f, 0f, 0f, 0.5f); // 빨간색, 투명도 50%
+        Color endColor = new Color(1f, 0f, 0f, 0.5f);
+
+        // LineRenderer의 startColor와 endColor에 적용
+        warningLine.startColor = startColor;
+        warningLine.endColor = endColor;
         //warningLine.sortingLayerName = "Default"; // 레이저가 그려질 레이어
         //warningLine.sortingOrder = 1; // 레이어 내 순서
 

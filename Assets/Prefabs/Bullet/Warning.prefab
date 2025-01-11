@@ -281,3 +281,5 @@ MonoBehaviour:
   distance: 0
   warningTime: 0
   warningLine: {fileID: 0}
+  warningColor: {r: 1, g: 0, b: 0, a: 0.5137255}
+  width: 0

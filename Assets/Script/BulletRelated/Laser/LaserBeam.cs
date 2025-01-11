@@ -14,11 +14,13 @@ public class LaserBeam : MonoBehaviour
     public float finalWidth; // 최종 레이저 두께
     public float duration; // 레이저 지속 시간
     public float expansionTime; // 레이저 확장 시간
+    public float contractionTime; // 레이저 확장 시간
 
     private float timer = 0f;
 
     void Start()
     {
+        contractionTime = expansionTime;
         lineRenderer = GetComponent<LineRenderer>();
         boxCollider = GetComponent<BoxCollider2D>();
 
@@ -36,8 +38,9 @@ public class LaserBeam : MonoBehaviour
 
         UpdateCollider();
 
-        // 일정 시간이 지나면 삭제
-        Destroy(gameObject, duration);
+        // 총 지속 시간 계산
+        float totalDuration = expansionTime + duration + contractionTime;
+        Destroy(gameObject, totalDuration);
     }
 
     void Update()
@@ -52,29 +55,26 @@ public class LaserBeam : MonoBehaviour
             lineRenderer.endWidth = width;
             UpdateCollider();
         }
+        else if (timer > expansionTime && timer <= expansionTime + duration)
+        {
+            // 유지 단계
+            lineRenderer.startWidth = finalWidth;
+            lineRenderer.endWidth = finalWidth;
+            UpdateCollider();
+        }
+        else if (timer > expansionTime + duration && timer <= expansionTime + duration + contractionTime)
+        {
+            // 축소 단계
+            float contractionTimer = timer - (expansionTime + duration);
+            float width = Mathf.Lerp(finalWidth, initialWidth, contractionTimer / contractionTime);
+            lineRenderer.startWidth = width;
+            lineRenderer.endWidth = width;
+            UpdateCollider();
+        }
     }
 
     void UpdateCollider()
     {
-        //// LineRenderer의 시작점과 끝점 가져오기
-        //Vector3 start = lineRenderer.GetPosition(0);
-        //Vector3 end = lineRenderer.GetPosition(1);
-
-        //// 레이저의 두께를 반영한 콜라이더 점 설정
-        //float width = lineRenderer.startWidth;
-        //Vector2 direction = (end - start).normalized;
-        //Vector2 perpendicular = new Vector2(-direction.y, direction.x) * width / 2;
-
-        //// 콜라이더의 네 점 설정 (레이저의 경계)
-        //Vector2[] points = new Vector2[4];
-        //points[0] = (Vector2)start + perpendicular;
-        //points[1] = (Vector2)start - perpendicular;
-        //points[2] = (Vector2)end - perpendicular;
-        //points[3] = (Vector2)end + perpendicular;
-
-        //boxCollider.points = points;
-        //// print four points
-        //Debug.Log(string.Format("{0} {1} {2} {3}", points[0], points[1], points[2], points[3]));
 
         // LineRenderer의 시작점과 끝점 가져오기
         Vector3 start = lineRenderer.GetPosition(0);

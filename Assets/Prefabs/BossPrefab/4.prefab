@@ -186,18 +186,18 @@ MonoBehaviour:
   player: {fileID: 0}
   pattern1BulletSpawner: []
   rotateBulletPrefab: {fileID: 2890520033606850585, guid: 1ab6cf254b4b9c1449d32b0a5ae4bc18, type: 3}
-  pattern1SpawnInterval: 0
-  pattern1BulletSpeed: 0
-  pattern1BulletRoSpeed: 0
-  pattern1RepeatCount: 0
+  pattern1SpawnInterval: 0.7
+  pattern1BulletSpeed: 2
+  pattern1BulletRoSpeed: 20
+  pattern1RepeatCount: 10
   pattern2BulletSpawner: []
-  laserManagerOb: {fileID: 0}
-  beamAngle: 5
-  initalWidth: 6
-  finalWidth: 5
-  distance: 6
-  duration: 6
-  expanstionTime: 6
-  warningTime: 6
-  pattern2SpawnInterval: 0.5
-  pattern2RepeatCount: 0
+  laserManagerPrefab: {fileID: 1946072231869938107, guid: 2ce077ac4eeda3740b267178fc5b5c7c, type: 3}
+  beamAngle: 0
+  initalWidth: 0.1
+  finalWidth: 3
+  distance: 8
+  duration: 2
+  expanstionTime: 0.8
+  warningTime: 1
+  pattern2SpawnInterval: 5
+  pattern2RepeatCount: 2
