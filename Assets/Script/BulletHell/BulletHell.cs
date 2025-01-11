@@ -3,14 +3,14 @@ using System.Collections;
 
 public class BulletHell : MonoBehaviour
 {
-    public BulletPoolManager poolManager; // BulletPoolManager ï¿½ï¿½ï¿½ï¿½
-    public int bulletCount;          // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ ï¿½ï¿½
-    public float spawnInterval;    // Åºï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½
-    public float bulletSpawnDelay; // ï¿½ï¿½ ï¿½Ñ¾ï¿½ ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public BulletPoolManager poolManager; // BulletPoolManager ÂüÁ¶
+    public int bulletCount;          // ÇÑ ¹ø¿¡ ¹ß»çÇÒ ÃÑ¾Ë ¼ö
+    public float spawnInterval;    // Åº¸· ÀüÃ¼ ¹ß»ç °£°Ý
+    public float bulletSpawnDelay; // °¢ ÃÑ¾Ë ¹ß»ç °£°Ý
 
     void Start()
     {
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Åºï¿½ï¿½ ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ÀÏÁ¤ ½Ã°£ °£°ÝÀ¸·Î Åº¸· ¹ß»ç ½ÃÀÛ
         InvokeRepeating(nameof(StartCircularPattern), 0f, spawnInterval);
     }
 
@@ -21,44 +21,44 @@ public class BulletHell : MonoBehaviour
 
     IEnumerator FireCircularPattern()
     {
-        float angleStep = 360f / bulletCount; // ï¿½ï¿½ ï¿½Ñ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        float angleStep = 360f / bulletCount; // °¢ ÃÑ¾Ë »çÀÌÀÇ °¢µµ
         float angle = 0f;
 
         for (int i = 0; i < bulletCount; i++)
         {
-            // Ç®ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            // Ç®¿¡¼­ ÃÑ¾Ë °¡Á®¿À±â
             GameObject bullet = poolManager.bulletPool.Get();
             if (bullet == null)
             {
-                Debug.LogWarning("ÅºÈ¯ï¿½ï¿½ Ç®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+                Debug.LogWarning("ÅºÈ¯À» Ç®¿¡¼­ °¡Á®¿Ã ¼ö ¾ø½À´Ï´Ù.");
                 continue;
             }
 
-            // ï¿½Ñ¾ï¿½ ï¿½Ê±ï¿½È­ (BulletPoolManagerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+            // ÃÑ¾Ë ÃÊ±âÈ­ (BulletPoolManager¸¦ Àü´Þ)
             Bullet bulletComponent = bullet.GetComponent<Bullet>();
             if (bulletComponent != null)
             {
-                bulletComponent.Initialize(poolManager, 5f, 0); // ï¿½Ñ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+                bulletComponent.Initialize(poolManager);
                 bulletComponent.SetDirection(GetDirectionFromAngle(angle)); // ?
             }
             else
             {
-                Debug.LogWarning("Bullet ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ñ¾Ë¿ï¿½ Ã·ï¿½ÎµÇ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
+                Debug.LogWarning("Bullet ½ºÅ©¸³Æ®°¡ ÃÑ¾Ë¿¡ Ã·ºÎµÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
             }
 
-            // ï¿½Ñ¾ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            // ÃÑ¾Ë À§Ä¡¿Í ¹æÇâ ¼³Á¤
             bullet.transform.position = transform.position;
-            bullet.transform.rotation = Quaternion.identity; // ï¿½Ê±ï¿½È­
+            bullet.transform.rotation = Quaternion.identity; // ÃÊ±âÈ­
 
-            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+            // ´ÙÀ½ °¢µµ·Î ÀÌµ¿
             angle += angleStep;
 
-            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+            // ´ÙÀ½ ÃÑ¾Ë ¹ß»ç±îÁö ´ë±â
             yield return new WaitForSeconds(bulletSpawnDelay);
         }
     }
 
-    // ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
+    // °¢µµ·ÎºÎÅÍ ¹æÇâ º¤ÅÍ¸¦ °è»êÇÏ´Â ¸Þ¼­µå
     private Vector2 GetDirectionFromAngle(float angle)
     {
         float dirX = Mathf.Cos(angle * Mathf.Deg2Rad);
