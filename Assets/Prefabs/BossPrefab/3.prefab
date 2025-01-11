@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 9d5b8f673b692c8499aa4c5c03b40c48, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -100,8 +100,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolManager: {fileID: 0}
   player: {fileID: 0}
+  pattern1BulletSpawner: []
   pattern1SpawnInterval: 0
   pattern1BulletSpeed: 0
+  pattern1RepeatCount: 0
+  pattern2BulletSpawner: {fileID: 0}
+  pattern2BulletSpeed: 5
+  pattern2Rows: 5
+  pattern2Columns: 6
+  pattern2SpawnInterval: 0.5
+  pattern2VerticalGap: 0
+  pattern2RightSideBulletPosition: 0
+  pattern3BulletSpawner: {fileID: 0}
+  bigBulletPrefab: {fileID: 0}
+  pattern3SpawnInterval: 0
+  pattern3BulletCount: 30
+  pattern3SpreadRadius: 1
+  pattern3SmallBulletSpeed: 5
+  pattern3BigBulletSpeed: 2
+  pattern3RepeatCount: 0
 --- !u!1 &7357745729902228419
 GameObject:
   m_ObjectHideFlags: 0

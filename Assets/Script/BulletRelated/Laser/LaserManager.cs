@@ -1,5 +1,5 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 public class LaserManager : MonoBehaviour
 {
@@ -23,12 +23,14 @@ public class LaserManager : MonoBehaviour
     IEnumerator FireLaser()
     {
         // 경고선 생성
+        Debug.Log("start making Warning line");
         GameObject warning = Instantiate(warningPrefab, Vector3.zero, Quaternion.identity);
         LaserWarning warningScript = warning.GetComponent<LaserWarning>();
         warningScript.startPoint = startPoint;
         warningScript.angle = angle;
         warningScript.distance = distance;
         warningScript.warningTime = warningTime;
+        warningScript.width = finalWidth;
 
         // 경고 시간이 지나면 레이저 생성
         yield return new WaitForSeconds(warningTime);
