@@ -18,7 +18,7 @@ public class TypingEffect : MonoBehaviour
         StartCoroutine(DisplayTypingEffect(text));
     }
 
-    IEnumerator DisplayTypingEffect(string text)
+    public IEnumerator DisplayTypingEffect(string text)
     {
         string displayedText = ""; // 누적된 출력 텍스트
 

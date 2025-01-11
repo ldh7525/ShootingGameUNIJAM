@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class PhaseManager : MonoBehaviour
@@ -14,19 +13,28 @@ public class PhaseManager : MonoBehaviour
         Phase4,
         Phase5
     }
+
     public GamePhase currentPhase;
+
     [Header("패턴 조절 인스펙터")]
-    [Tooltip("1-2/2-3 이렇게 입력하면 보스1의 2번째 패턴, 보스2의 3번째 패턴이 동시에 실행 *공백 들어가면 망함*")]
     [SerializeField] private List<string> patternCombinationPhase1;
-    [Tooltip("1-2/2-3 이렇게 입력하면 보스1의 2번째 패턴, 보스2의 3번째 패턴이 동시에 실행 *공백 들어가면 망함*")]
     [SerializeField] private List<string> patternCombinationPhase2;
-    [Tooltip("1-2/2-3 이렇게 입력하면 보스1의 2번째 패턴, 보스2의 3번째 패턴이 동시에 실행 *공백 들어가면 망함*")]
     [SerializeField] private List<string> patternCombinationPhase3;
-    [Tooltip("1-2/2-3 이렇게 입력하면 보스1의 2번째 패턴, 보스2의 3번째 패턴이 동시에 실행 *공백 들어가면 망함*")]
     [SerializeField] private List<string> patternCombinationPhase4;
 
-    [Space (10f)]
-    [SerializeField] private TextMeshProUGUI timeText;
+    [Header("페이즈 전환 시간 설정")]
+    [SerializeField] private float phase1TransitionDelay;
+    [SerializeField] private float phase2TransitionDelay;
+    [SerializeField] private float phase3TransitionDelay;
+    [SerializeField] private float phase4TransitionDelay;
+
+    [Header("대사 출력 관련 설정")]
+    [SerializeField] private TypingEffect typingEffect;
+    [SerializeField] private string phase1Dialogue = "페이즈 1이 종료되었습니다.";
+    [SerializeField] private string phase2Dialogue = "페이즈 2로 넘어갑니다.";
+    [SerializeField] private string phase3Dialogue = "페이즈 3이 시작됩니다.";
+    [SerializeField] private string phase4Dialogue = "최종 페이즈 준비 중입니다.";
+
     [SerializeField] private GameManager gameManager;
 
     [SerializeField] private Boss1 Boss1;
@@ -47,27 +55,26 @@ public class PhaseManager : MonoBehaviour
         switch (phase)
         {
             case GamePhase.Phase1:
-                StartCoroutine(PhaseRoutine(patternCombinationPhase1));
+                StartCoroutine(PhaseRoutine(patternCombinationPhase1, phase1TransitionDelay, phase1Dialogue));
                 break;
             case GamePhase.Phase2:
-                StartCoroutine(PhaseRoutine(patternCombinationPhase2));
+                StartCoroutine(PhaseRoutine(patternCombinationPhase2, phase2TransitionDelay, phase2Dialogue));
                 break;
             case GamePhase.Phase3:
-                StartCoroutine(PhaseRoutine(patternCombinationPhase3));
+                StartCoroutine(PhaseRoutine(patternCombinationPhase3, phase3TransitionDelay, phase3Dialogue));
                 break;
             case GamePhase.Phase4:
-                StartCoroutine(PhaseRoutine(patternCombinationPhase4)); // 반복 사용 예시
+                StartCoroutine(PhaseRoutine(patternCombinationPhase4, phase4TransitionDelay, phase4Dialogue));
                 break;
             case GamePhase.Phase5:
                 break;
         }
     }
 
-    IEnumerator PhaseRoutine(List<string> patternCombination)
+    IEnumerator PhaseRoutine(List<string> patternCombination, float transitionDelay, string dialogue)
     {
         foreach (string pattern in patternCombination)
         {
-            // "/"로 패턴 그룹을 나누고 동시에 실행
             string[] splitPatterns = pattern.Split('/');
             List<Coroutine> coroutines = new List<Coroutine>();
 
@@ -76,7 +83,6 @@ public class PhaseManager : MonoBehaviour
                 coroutines.Add(StartCoroutine(ExecutePattern(subPattern)));
             }
 
-            // 모든 코루틴이 완료될 때까지 대기
             foreach (Coroutine coroutine in coroutines)
             {
                 yield return coroutine;
@@ -84,6 +90,12 @@ public class PhaseManager : MonoBehaviour
         }
 
         Debug.Log($"{currentPhase} 완료!");
+
+        // 대사 출력
+        yield return StartCoroutine(typingEffect.DisplayTypingEffect(dialogue));
+
+        // 전환 딜레이
+        yield return new WaitForSeconds(transitionDelay);
 
         // 다음 페이즈로 전환
         if (currentPhase < GamePhase.Phase5)
