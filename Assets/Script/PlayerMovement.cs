@@ -33,8 +33,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private int invincibleTime; // 무적 시간
     private bool isInvincible = false; // 무적 상태 플래그
 
+    [SerializeField] private CameraShakeOnHit hit;
+
     void Start()
     {
+        hit = GetComponent<CameraShakeOnHit>();
         ani = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         currentSpeed = moveSpeed;
@@ -65,15 +68,6 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = movement.normalized * currentSpeed * Time.deltaTime * 50;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Bullet") && !isInvincible) // 무적 상태가 아닐 때만 피해를 받음
-        {
-            playerHealth--;
-            StartCoroutine(BecomeInvincible()); // 무적 상태 활성화
-            Destroy(collision.gameObject);
-        }
-    }
 
     void MoveSpriteManager()
     {
@@ -179,5 +173,15 @@ public class PlayerMovement : MonoBehaviour
         Color spriteColor = spriteRenderer.color;
         spriteColor.a = alpha;
         spriteRenderer.color = spriteColor;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Bullet") && !isInvincible) // 무적 상태가 아닐 때만 피해를 받음
+        {
+            playerHealth--;
+            StartCoroutine(BecomeInvincible()); // 무적 상태 활성화
+            Destroy(collision.gameObject);
+            hit.TriggerShake();
+        }
     }
 }
