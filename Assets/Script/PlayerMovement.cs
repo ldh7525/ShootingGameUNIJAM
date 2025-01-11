@@ -118,6 +118,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator ApplyBoost()
     {
         isBoosting = true;
+        isInvincible = true;
         float originalSpeed = currentSpeed;
         currentSpeed *= boostMultiplier;
 
@@ -125,6 +126,7 @@ public class PlayerMovement : MonoBehaviour
 
         currentSpeed = originalSpeed;
         isBoosting = false;
+        isInvincible = false;
     }
 
     IEnumerator BecomeInvincible()
