@@ -2785,13 +2785,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolManager: {fileID: 1063760691}
   player: {fileID: 1132183888}
-  pattern2BulletSpawner: []
-  pattern3BulletSpawner: []
   pattern1BulletSpawner:
   - {fileID: 1800711718}
-  spawnInterval: 1
-  speed: 5
-  repeatCount: 10
+  pattern1SpawnInterval: 1
+  pattern1BulletSpeed: 4
+  pattern1RepeatCount: 10
+  pattern2BulletSpawner:
+  - {fileID: 1800711718}
+  pattern2BulletCount: 5
+  pattern2SpawnInterval: 1
+  pattern2BulletSpeed: 4
+  pattern2AngleStep: 10
+  pattern2RepeatCount: 10
+  pattern3BulletSpawner: []
+  pattern3BulletCount: 5
+  pattern3SpawnInterval: 1
+  pattern3BulletSpeed: 4
+  pattern3Hight: 5
+  pattern3Width: 10
+  pattern3RepeatCount: 10
 --- !u!212 &1800711717
 SpriteRenderer:
   m_ObjectHideFlags: 0
