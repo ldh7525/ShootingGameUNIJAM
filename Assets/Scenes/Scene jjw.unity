@@ -2797,13 +2797,14 @@ MonoBehaviour:
   pattern2BulletSpeed: 4
   pattern2AngleStep: 10
   pattern2RepeatCount: 10
-  pattern3BulletSpawner: []
+  pattern3BulletSpawner:
+  - {fileID: 1800711718}
   pattern3BulletCount: 5
   pattern3SpawnInterval: 1
   pattern3BulletSpeed: 4
-  pattern3Hight: 5
-  pattern3Width: 10
-  pattern3RepeatCount: 10
+  pattern3Height: 0.3
+  pattern3Width: 0.3
+  pattern3RepeatCount: 5
 --- !u!212 &1800711717
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3241,12 +3242,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPhase: 0
-  phaseTime:
-  - 5
-  - 5
-  - 5
-  - 5
-  - 5
+  patternCombinationPhase1:
+  - 1-3
+  - 1-3
+  - 1-3
+  patternCombinationPhase2: []
+  patternCombinationPhase3: []
+  patternCombinationPhase4: []
   timeText: {fileID: 2112980416}
   gameManager: {fileID: 1141113869}
   Boss1: {fileID: 1800711716}

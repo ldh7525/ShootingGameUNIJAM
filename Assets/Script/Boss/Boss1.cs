@@ -31,7 +31,7 @@ public class Boss1 : MonoBehaviour
     [SerializeField] private int pattern3BulletCount;          // number of bullets in one shot
     [SerializeField] private float pattern3SpawnInterval;    // number of seconds between shots
     [SerializeField] private float pattern3BulletSpeed; // speed of bullets
-    [SerializeField] private float pattern3Hight;
+    [SerializeField] private float pattern3Height;
     [SerializeField] private float pattern3Width;
     [SerializeField] private float pattern3RepeatCount;
 
@@ -79,12 +79,13 @@ public class Boss1 : MonoBehaviour
 
     public IEnumerator Pattern2()
     {
-        Vector2 direction = player.position - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        
 
         int shootCount = 0;
         while (shootCount < pattern2RepeatCount)
         {
+            Vector2 direction = player.position - transform.position;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             for (int i = 0; i < pattern2BulletCount; i++)
             {
                 // Ǯ���� �Ѿ� ��������
@@ -126,12 +127,12 @@ public class Boss1 : MonoBehaviour
 
     public IEnumerator Pattern3()
     {
-        Vector2 direction = player.position - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
         int shootCount = 0;
         while (shootCount < pattern3RepeatCount)
         {
+            Vector2 direction = player.position - transform.position;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
             for (int i = 0; i < pattern3BulletCount; i++)
             {
                 // Ǯ���� �Ѿ� ��������
@@ -159,7 +160,7 @@ public class Boss1 : MonoBehaviour
                 int offset_abs = -Mathf.Abs(offset);
                 Vector3 normDir = new Vector3(direction.x, direction.y, 0).normalized;
                 Vector3 perpDir = new Vector3(-direction.y, direction.x, 0).normalized;
-                bullet.transform.position = transform.position + (perpDir * offset * pattern3Width) + (normDir * offset_abs * pattern3Hight);
+                bullet.transform.position = transform.position + (perpDir * offset * pattern3Width) + (normDir * offset_abs * pattern3Height);
                 bullet.transform.rotation = Quaternion.identity; // �ʱ�ȭ
 
                 // ���� ������ �̵�

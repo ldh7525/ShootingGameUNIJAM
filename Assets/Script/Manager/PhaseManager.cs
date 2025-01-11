@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class PhaseManager : MonoBehaviour
 {
-    // 게임 페이즈를 정의 
     public enum GamePhase
     {
         Phase1,
@@ -15,22 +14,29 @@ public class PhaseManager : MonoBehaviour
         Phase4,
         Phase5
     }
-    public GamePhase currentPhase; // 초기 페이즈 설정
+    public GamePhase currentPhase;
+    [Header("패턴 조절 인스펙터")]
+    [Tooltip("1-2/2-3 이렇게 입력하면 보스1의 2번째 패턴, 보스2의 3번째 패턴이 동시에 실행 *공백 들어가면 망함*")]
+    [SerializeField] private List<string> patternCombinationPhase1;
+    [Tooltip("1-2/2-3 이렇게 입력하면 보스1의 2번째 패턴, 보스2의 3번째 패턴이 동시에 실행 *공백 들어가면 망함*")]
+    [SerializeField] private List<string> patternCombinationPhase2;
+    [Tooltip("1-2/2-3 이렇게 입력하면 보스1의 2번째 패턴, 보스2의 3번째 패턴이 동시에 실행 *공백 들어가면 망함*")]
+    [SerializeField] private List<string> patternCombinationPhase3;
+    [Tooltip("1-2/2-3 이렇게 입력하면 보스1의 2번째 패턴, 보스2의 3번째 패턴이 동시에 실행 *공백 들어가면 망함*")]
+    [SerializeField] private List<string> patternCombinationPhase4;
 
-    [SerializeField] private string[] patternCombination;
-
+    [Space (10f)]
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private GameManager gameManager;
 
     [SerializeField] private Boss1 Boss1;
-    [SerializeField] private GameObject Boss2;
-    [SerializeField] private GameObject Boss3;
-    [SerializeField] private GameObject Boss4;
+    [SerializeField] private Boss2 Boss2;
+    [SerializeField] private Boss3 Boss3;
+    [SerializeField] private Boss4 Boss4;
 
     void Start()
     {
-        ParsingPattern();
-        StartPhase(GamePhase.Phase1); // Phase 1 시작
+        StartPhase(GamePhase.Phase1);
     }
 
     void StartPhase(GamePhase phase)
@@ -38,83 +44,106 @@ public class PhaseManager : MonoBehaviour
         currentPhase = phase;
         Debug.Log($"{phase} 시작!");
 
-        // 각 페이즈별 코루틴 실행
         switch (phase)
         {
             case GamePhase.Phase1:
-                StartCoroutine(Phase1Routine());
+                StartCoroutine(PhaseRoutine(patternCombinationPhase1));
                 break;
             case GamePhase.Phase2:
-                StartCoroutine(Phase2Routine());
+                StartCoroutine(PhaseRoutine(patternCombinationPhase2));
                 break;
             case GamePhase.Phase3:
-                StartCoroutine(Phase3Routine());
+                StartCoroutine(PhaseRoutine(patternCombinationPhase3));
                 break;
             case GamePhase.Phase4:
-                StartCoroutine(Phase4Routine());
+                StartCoroutine(PhaseRoutine(patternCombinationPhase4)); // 반복 사용 예시
                 break;
             case GamePhase.Phase5:
-                StartCoroutine(Phase5Routine());
                 break;
         }
     }
 
-    IEnumerator Phase1Routine()
+    IEnumerator PhaseRoutine(List<string> patternCombination)
     {
-        // Phase 1에서 실행할 작업
-        yield return StartCoroutine(Boss1.Pattern3()); // 예: 특정 작업을 대기
-        Debug.Log("Phase 1 완료!");
-
-        StartPhase(GamePhase.Phase2); // 다음 Phase로 전환
-    }
-    IEnumerator Phase2Routine()
-    {
-        // Phase 2에서 실행할 작업
-        yield return StartCoroutine(SomeTask()); // 코루틴 작업 수행
-        Debug.Log("Phase 2 완료!");
-
-        StartPhase(GamePhase.Phase3); // 다음 Phase로 전환
-    }
-
-    IEnumerator Phase3Routine()
-    {
-        // Phase 3에서 실행할 작업
-        yield return new WaitForSeconds(3f);
-        Debug.Log("Phase 3 완료!");
-
-        StartPhase(GamePhase.Phase4); // 다음 Phase로 전환
-    }
-
-    IEnumerator Phase4Routine()
-    {
-        // Phase 4에서 실행할 작업
-        yield return new WaitForSeconds(2f);
-        Debug.Log("Phase 4 완료!");
-
-        StartPhase(GamePhase.Phase5); // 다음 Phase로 전환
-    }
-
-    IEnumerator Phase5Routine()
-    {
-        // Phase 5에서 실행할 작업
-        yield return new WaitForSeconds(1f);
-        Debug.Log("Phase 5 완료!");
-
-        gameManager.isGameClear = true; // 게임 종료 처리
-    }
-
-    IEnumerator SomeTask()
-    {
-        Debug.Log("Phase 2: SomeTask 실행 중...");
-        yield return new WaitForSeconds(1f); // 예: 작업 대기
-        Debug.Log("Phase 2: SomeTask 완료!");
-    }
-
-    private void ParsingPattern()
-    {
-        for(int i = 0; i< patternCombination.Length; i++)
+        foreach (string pattern in patternCombination)
         {
-            string[] parts = patternCombination[i].Split('-');
+            // "/"로 패턴 그룹을 나누고 동시에 실행
+            string[] splitPatterns = pattern.Split('/');
+            List<Coroutine> coroutines = new List<Coroutine>();
+
+            foreach (string subPattern in splitPatterns)
+            {
+                coroutines.Add(StartCoroutine(ExecutePattern(subPattern)));
+            }
+
+            // 모든 코루틴이 완료될 때까지 대기
+            foreach (Coroutine coroutine in coroutines)
+            {
+                yield return coroutine;
+            }
+        }
+
+        Debug.Log($"{currentPhase} 완료!");
+
+        // 다음 페이즈로 전환
+        if (currentPhase < GamePhase.Phase5)
+        {
+            StartPhase(currentPhase + 1);
+        }
+        else
+        {
+            gameManager.isGameClear = true;
+        }
+    }
+
+    IEnumerator ExecutePattern(string pattern)
+    {
+        string[] parts = pattern.Split('-');
+        if (parts.Length != 2)
+        {
+            Debug.LogError($"잘못된 패턴 형식: {pattern}");
+            yield break;
+        }
+
+        string bossName = parts[0].Trim();
+        string patternName = parts[1].Trim();
+
+        if (!int.TryParse(bossName, out int bossNumber))
+        {
+            Debug.LogError($"잘못된 보스 이름: {bossName}");
+            yield break;
+        }
+
+        switch (bossNumber)
+        {
+            case 1:
+                yield return StartCoroutine(InvokeBossPattern(Boss1, patternName));
+                break;
+            case 2:
+                yield return StartCoroutine(InvokeBossPattern(Boss2, patternName));
+                break;
+            case 3:
+                yield return StartCoroutine(InvokeBossPattern(Boss3, patternName));
+                break;
+            case 4:
+                yield return StartCoroutine(InvokeBossPattern(Boss4, patternName));
+                break;
+            default:
+                Debug.LogError($"잘못된 보스 번호: {bossNumber}");
+                break;
+        }
+    }
+
+    IEnumerator InvokeBossPattern(object boss, string patternName)
+    {
+        var method = boss.GetType().GetMethod($"Pattern{patternName}");
+        if (method != null && method.ReturnType == typeof(IEnumerator))
+        {
+            yield return (IEnumerator)method.Invoke(boss, null);
+        }
+        else
+        {
+            Debug.LogError($"해당 패턴 메서드가 없습니다: Pattern{patternName}");
         }
     }
 }
