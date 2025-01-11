@@ -16,25 +16,28 @@ public class PhaseManager : MonoBehaviour
 
     public GamePhase currentPhase;
 
-    [Header("ÆÐÅÏ Á¶Àý ÀÎ½ºÆåÅÍ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private List<string> patternCombinationPhase1;
     [SerializeField] private List<string> patternCombinationPhase2;
     [SerializeField] private List<string> patternCombinationPhase3;
     [SerializeField] private List<string> patternCombinationPhase4;
 
-    [Header("ÆäÀÌÁî ÀüÈ¯ ½Ã°£ ¼³Á¤")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private float phase1TransitionDelay;
     [SerializeField] private float phase2TransitionDelay;
     [SerializeField] private float phase3TransitionDelay;
     [SerializeField] private float phase4TransitionDelay;
 
-    [Header("´ë»ç Ãâ·Â °ü·Ã ¼³Á¤")]
+    [Header("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private TypingEffect typingEffect;
-    [SerializeField] private string phase1Dialogue = "ÆäÀÌÁî 1ÀÌ Á¾·áµÇ¾ú½À´Ï´Ù.";
-    [SerializeField] private string phase2Dialogue = "ÆäÀÌÁî 2·Î ³Ñ¾î°©´Ï´Ù.";
-    [SerializeField] private string phase3Dialogue = "ÆäÀÌÁî 3ÀÌ ½ÃÀÛµË´Ï´Ù.";
-    [SerializeField] private string phase4Dialogue = "ÃÖÁ¾ ÆäÀÌÁî ÁØºñ ÁßÀÔ´Ï´Ù.";
+    [SerializeField] private string phase1Dialogue = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.";
+    [SerializeField] private string phase2Dialogue = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½Ñ¾î°©ï¿½Ï´ï¿½.";
+    [SerializeField] private string phase3Dialogue = "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµË´Ï´ï¿½.";
+    [SerializeField] private string phase4Dialogue = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ ï¿½ï¿½ï¿½Ô´Ï´ï¿½.";
 
+    [Space (10f)]
+    [SerializeField] private TextMeshProUGUI timeText;
+    private float timeFloat = 0f;
     [SerializeField] private GameManager gameManager;
 
     [SerializeField] private Boss1 Boss1;
@@ -44,13 +47,19 @@ public class PhaseManager : MonoBehaviour
 
     void Start()
     {
-        StartPhase(GamePhase.Phase1);
+        StartPhase(GamePhase.Phase3);
+    }
+
+    private void Update()
+    {
+        timeFloat += Time.deltaTime;
+        timeText.text = timeFloat.ToString("F2");
     }
 
     void StartPhase(GamePhase phase)
     {
         currentPhase = phase;
-        Debug.Log($"{phase} ½ÃÀÛ!");
+        Debug.Log($"{phase} ï¿½ï¿½ï¿½ï¿½!");
 
         switch (phase)
         {
@@ -89,15 +98,15 @@ public class PhaseManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"{currentPhase} ¿Ï·á!");
+        Debug.Log($"{currentPhase} ï¿½Ï·ï¿½!");
 
-        // ´ë»ç Ãâ·Â
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         yield return StartCoroutine(typingEffect.DisplayTypingEffect(dialogue));
 
-        // ÀüÈ¯ µô·¹ÀÌ
+        // ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(transitionDelay);
 
-        // ´ÙÀ½ ÆäÀÌÁî·Î ÀüÈ¯
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
         if (currentPhase < GamePhase.Phase5)
         {
             StartPhase(currentPhase + 1);
@@ -113,7 +122,7 @@ public class PhaseManager : MonoBehaviour
         string[] parts = pattern.Split('-');
         if (parts.Length != 2)
         {
-            Debug.LogError($"Àß¸øµÈ ÆÐÅÏ Çü½Ä: {pattern}");
+            Debug.LogError($"ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {pattern}");
             yield break;
         }
 
@@ -122,7 +131,7 @@ public class PhaseManager : MonoBehaviour
 
         if (!int.TryParse(bossName, out int bossNumber))
         {
-            Debug.LogError($"Àß¸øµÈ º¸½º ÀÌ¸§: {bossName}");
+            Debug.LogError($"ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½: {bossName}");
             yield break;
         }
 
@@ -141,7 +150,7 @@ public class PhaseManager : MonoBehaviour
                 yield return StartCoroutine(InvokeBossPattern(Boss4, patternName));
                 break;
             default:
-                Debug.LogError($"Àß¸øµÈ º¸½º ¹øÈ£: {bossNumber}");
+                Debug.LogError($"ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£: {bossNumber}");
                 break;
         }
     }
@@ -155,7 +164,7 @@ public class PhaseManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"ÇØ´ç ÆÐÅÏ ¸Þ¼­µå°¡ ¾ø½À´Ï´Ù: Pattern{patternName}");
+            Debug.LogError($"boss {boss}: Pattern{patternName}");
         }
     }
 

@@ -1,18 +1,19 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BigBullet : MonoBehaviour
 {
-    public GameObject bulletPrefab; // 발사할 탄환 프리팹
-    public int bulletCount = 30; // 발사할 탄환의 개수
-    public float spreadRadius = 1f; // 탄환이 퍼질 거리
-    public float smallBulletSpeed = 5f; // 발사된 탄환의 속도
-    public float bigBulletSpeed = 2f; // BigBullet의 이동 속도
-    public BulletPoolManager poolManager; // BulletPoolManager 참조
+    private int bulletCount = 30; // 발사할 탄환의 개수
+    private float spreadRadius = 1f; // 탄환이 퍼질 거리
+    private float smallBulletSpeed = 5f; // 발사된 탄환의 속도
+    private float bigBulletSpeed = 2f; // BigBullet의 이동 속도
+    private BulletPoolManager poolManager; // BulletPoolManager 참조
+    private Vector2 moveDirection;
 
     private void Update()
     {
         // BigBullet move
-        transform.Translate(Vector2.right * bigBulletSpeed * Time.deltaTime);
+        transform.Translate(moveDirection * bigBulletSpeed * Time.deltaTime);
     }
 
     public void OnTriggerExit2D(Collider2D other)
@@ -28,7 +29,7 @@ public class BigBullet : MonoBehaviour
     {
         Debug.Log($"Bullet {name} exited the trigger zone!");
         SpreadBullets(); // 탄환 발사
-        Destroy(gameObject); // BigBullet 풀로 반환
+        Destroy(gameObject); // BigBullet 풀로 반환 
     }
 
     void SpreadBullets()
@@ -58,5 +59,19 @@ public class BigBullet : MonoBehaviour
                 bulletComponent.Initialize(poolManager, smallBulletSpeed, 0); // 속도 및 모드 설정
             }
         }
+    }
+
+    public void Init(int bulletCount, float spreadRadius, float smallBulletSpeed, float bigBulletSpeed, BulletPoolManager poolManager)
+    {
+        this.bulletCount = bulletCount;
+        this.spreadRadius = spreadRadius;
+        this.smallBulletSpeed = smallBulletSpeed;
+        this.bigBulletSpeed = bigBulletSpeed;
+        this.poolManager = poolManager;
+    }
+
+    public void SetDirection(Vector2 direction)
+    {
+        moveDirection = direction.normalized;
     }
 }
