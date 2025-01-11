@@ -7,8 +7,8 @@ public class Boss3 : MonoBehaviour
     public BulletPoolManager poolManager; // BulletPoolManager ����
     public Transform player;
     [Header("Pattern1 var")]
-    public float pattern1SpawnInterval;    // 총알 발사 간격 (초 단위)
-    public float pattern1BulletSpeed; // 총알 속도
+    [SerializeField] private float pattern1SpawnInterval;    // 총알 발사 간격 (초 단위)
+    [SerializeField] private float pattern1BulletSpeed; // 총알 속도
 
 
     // 각도에서 방향 벡터를 계산하는 메서드
