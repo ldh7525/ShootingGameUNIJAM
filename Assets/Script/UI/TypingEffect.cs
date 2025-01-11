@@ -6,6 +6,7 @@ public class TypingEffect : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textDisplay; // 출력할 TextMeshProUGUI
 
+    public bool isTypingComplete;
     // 초성, 중성, 종성 정의
     private readonly char[] 초성 = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
     private readonly char[] 중성 = { 'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ' };
@@ -15,7 +16,8 @@ public class TypingEffect : MonoBehaviour
     {
         // 예제 텍스트 설정
         string text = "";
-        StartCoroutine(DisplayTypingEffect(text));
+        //StartCoroutine(DisplayTypingEffect(text));
+        isTypingComplete = false;
     }
 
     public IEnumerator DisplayTypingEffect(string text)
@@ -36,6 +38,7 @@ public class TypingEffect : MonoBehaviour
                 yield return new WaitForSeconds(0.1f); // 대기 시간
             }
         }
+        isTypingComplete = true;
     }
 
     IEnumerator TypingHangul(char targetChar, string prefix)

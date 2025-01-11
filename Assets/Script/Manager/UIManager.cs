@@ -7,8 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("시작 스크립트용")]
+    [SerializeField] private GameObject StartPanel;
     // On on Start
-    [Header ("게임 시작시 항상 활성화")]
+    [Header ("스테이지 시작시 항상 활성화")]
     [SerializeField] private GameObject StartButton;
     [SerializeField] private GameObject pauseButton;
     [SerializeField] private GameObject pauseMenu;
@@ -21,7 +23,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
-    [SerializeField] private CameraShakeOnHit camShake;
 
     //Manager
     [Header("매니저")]
@@ -34,8 +35,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private bool isDialogueActive = false; // 대화창 활성화 여부
     [SerializeField] private bool isPaused = true;
 
-    private FadeController fade;
+    [Header("오프닝 스크립트")]
+    [SerializeField] private string openingScript;
 
+    private FadeController fade;
+    private TypingEffect te;
+    private bool isOpening;
     private void Start()
     {
         if (dialoguePanel != null)
@@ -44,6 +49,7 @@ public class UIManager : MonoBehaviour
         }
         Time.timeScale = 1f;
         fade = GetComponent<FadeController>();
+        te = GetComponent<TypingEffect>();
     }
 
     void Update()
@@ -53,13 +59,31 @@ public class UIManager : MonoBehaviour
         {
             ToggleDialogue("대화창이 나타났습니다!");
         }
+        if(isOpening && Input.GetKeyUp(KeyCode.Escape))
+        {
+            StageStart();
+            isOpening = false;
+        }
+        if(isOpening && te.isTypingComplete)
+        {
+            StageStart();
+        }
+
 
         IsOver();
     }
 
     public void GameStart()
     {
+        isOpening = true;
         StartButton.SetActive(false);
+        StartPanel.SetActive(true);
+        StartCoroutine(te.DisplayTypingEffect(openingScript));
+    }
+
+    public void StageStart()
+    {
+        StartPanel.SetActive(false);
         player.SetActive(true);
         phaseManager.SetActive(true);
         spawbManager.SetActive(true);
@@ -131,7 +155,6 @@ public class UIManager : MonoBehaviour
             gameOverPanel.SetActive(true);
             gameOverText.text = "Game Clear";
         }
-        camShake.StopAllCoroutines();
         fade.StartFadeIn();
     }
     
