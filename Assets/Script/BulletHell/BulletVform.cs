@@ -1,28 +1,32 @@
 using UnityEngine;
 using System.Collections;
 
-public class BulletHell : MonoBehaviour
+public class BulletVform : MonoBehaviour
 {
     public BulletPoolManager poolManager; // BulletPoolManager ����
-    public int bulletCount;          // �� ���� �߻��� �Ѿ� ��
-    public float spawnInterval;    // ź�� ��ü �߻� ����
-    public float bulletSpawnDelay; // �� �Ѿ� �߻� ����
+    public int bulletCount;          // number of bullets in one shot
+    public float spawnInterval;    // number of seconds between shots
+    public float speed; // speed of bullets
+    public Transform player; 
+    public float height;
+    public float wight;
 
     void Start()
     {
         // ���� �ð� �������� ź�� �߻� ����
-        InvokeRepeating(nameof(StartCircularPattern), 0f, spawnInterval);
+        InvokeRepeating(nameof(StartPattern), 0f, spawnInterval);
     }
 
-    void StartCircularPattern()
+    void StartPattern()
     {
-        StartCoroutine(FireCircularPattern());
+        StartCoroutine(FireVformPattern());
     }
 
-    IEnumerator FireCircularPattern()
+    IEnumerator FireVformPattern()
     {
-        float angleStep = 360f / bulletCount; // �� �Ѿ� ������ ����
-        float angle = 0f;
+        Vector2 direction = player.position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        
 
         for (int i = 0; i < bulletCount; i++)
         {
@@ -38,7 +42,7 @@ public class BulletHell : MonoBehaviour
             Bullet bulletComponent = bullet.GetComponent<Bullet>();
             if (bulletComponent != null)
             {
-                bulletComponent.Initialize(poolManager, 5f, 0); // �Ѿ� ���� �ʱ�ȭ
+                bulletComponent.Initialize(poolManager, speed, 0); // �Ѿ� ���� �ʱ�ȭ
                 bulletComponent.SetDirection(GetDirectionFromAngle(angle)); // ?
             }
             else
@@ -47,15 +51,21 @@ public class BulletHell : MonoBehaviour
             }
 
             // �Ѿ� ��ġ�� ���� ����
-            bullet.transform.position = transform.position;
+            int offset = i - bulletCount / 2;
+            int offset_abs = - Mathf.Abs(offset);
+            Vector3 normDir = new Vector3(direction.x, direction.y, 0).normalized;
+            Vector3 perpDir = new Vector3(-direction.y, direction.x, 0).normalized;
+            bullet.transform.position = transform.position + (perpDir * offset * wight) + (normDir * offset_abs * height);
             bullet.transform.rotation = Quaternion.identity; // �ʱ�ȭ
 
             // ���� ������ �̵�
-            angle += angleStep;
+            // angle += angleStep;
 
             // ���� �Ѿ� �߻���� ���
-            yield return new WaitForSeconds(bulletSpawnDelay);
+           // yield return new WaitForSeconds(bulletSpawnDelay);
+            
         }
+        yield return null;
     }
 
     // �����κ��� ���� ���͸� ����ϴ� �޼���
