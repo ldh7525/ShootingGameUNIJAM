@@ -24,8 +24,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private GameObject gameOverImage;
-    [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private TextMeshProUGUI dialogueText;
+    //[SerializeField] private GameObject dialoguePanel;
+    //[SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private CameraShakeOnHit camShake;
 
     //Manager
@@ -47,10 +47,7 @@ public class UIManager : MonoBehaviour
     private bool isOpening;
     private void Start()
     {
-        if (dialoguePanel != null)
-        {
-            dialogueText = dialoguePanel.GetComponentInChildren<TextMeshProUGUI>();
-        }
+        
         Time.timeScale = 1f;
         fade = GetComponent<FadeController>();
         te = GetComponent<TypingEffect>();
@@ -61,7 +58,7 @@ public class UIManager : MonoBehaviour
         // 예시: 스페이스바를 눌러 대화창 활성화/비활성화
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            ToggleDialogue("대화창이 나타났습니다!");
+            //ToggleDialogue("대화창이 나타났습니다!");
         }
         if(isOpening && Input.GetKeyUp(KeyCode.Escape))
         {
@@ -98,7 +95,7 @@ public class UIManager : MonoBehaviour
     }
 
     // 대화창 토글 메서드
-    public void ToggleDialogue(string message)
+/*    public void ToggleDialogue(string message)
     {
         if (dialoguePanel == null) return;
 
@@ -110,7 +107,7 @@ public class UIManager : MonoBehaviour
             // 텍스트 및 이미지 설정
             dialogueText.text = message;
         }
-    }
+    }*/
     public void TogglePause()
     {
         isPaused = !isPaused;

@@ -26,7 +26,7 @@ public class SoundReactiveCircle : MonoBehaviour
         float bassValue = spectrumData[1] * sensitivity;
 
         // 부드러운 크기 변화 적용 (y축 위치 변화와 크기 변화에 사용 가능)
-        float targetSize = Mathf.Clamp(bassValue * scaleMultiplier, 7f, 8f);
+        float targetSize = Mathf.Clamp(bassValue * scaleMultiplier, 6f, 7f);
         smoothScale = Mathf.SmoothDamp(smoothScale, targetSize, ref velocity, smoothTime);
 
         // 적용된 크기를 원의 스케일에 반영

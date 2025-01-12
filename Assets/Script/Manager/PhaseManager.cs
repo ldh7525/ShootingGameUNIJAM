@@ -37,6 +37,7 @@ public class PhaseManager : MonoBehaviour
 
     [Header("페이즈 시작시 등장")]
     [SerializeField] private GameObject bossStart;
+    [SerializeField] private GameObject textBox;
 
     [Space(10f)]
     [SerializeField] private TextMeshProUGUI timeText;
@@ -91,6 +92,7 @@ public class PhaseManager : MonoBehaviour
 
     IEnumerator PhaseRoutine(List<string> patternCombination, float transitionDelay, string dialogue)
     {
+        textBox.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -420);
         bossStart.SetActive(true);
         // 페이즈 대사 출력
         yield return StartCoroutine(typingEffect.DisplayTypingEffect(dialogue));
@@ -112,7 +114,6 @@ public class PhaseManager : MonoBehaviour
         }
 
         Debug.Log($"{currentPhase} 완료!");
-
 
         // 전환 대기 시간
         yield return new WaitForSeconds(transitionDelay);
