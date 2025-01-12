@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private CameraShakeOnHit camShake;
 
     //Manager
     [Header("¸Å´ÏÀú")]
@@ -157,6 +158,7 @@ public class UIManager : MonoBehaviour
             gameOverPanel.SetActive(true);
             gameOverText.text = "Game Clear";
         }
+        camShake.StopAllCoroutines();
         fade.StartFadeIn();
     }
     

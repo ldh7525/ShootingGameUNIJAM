@@ -1,21 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Stamina : MonoBehaviour
 {
     PlayerMovement playerMovement;
-    RectTransform rectTransform;
+    [SerializeField] TextMeshProUGUI dashCount;
+    [SerializeField] RectTransform scale;
 
     void Start()
     {
         playerMovement = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();    
-        rectTransform = GetComponent<RectTransform>();
+        scale = GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        rectTransform.localScale = new Vector2(playerMovement.stamina / 100, 1);
+        float dashnum = playerMovement.stamina / 20;
+        dashCount.text = dashnum.ToString("F1");
+        
+        scale.localScale = new Vector3 (playerMovement.stamina / 100 , 1, 1);
     }
 }

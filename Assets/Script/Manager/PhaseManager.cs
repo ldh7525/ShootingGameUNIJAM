@@ -35,6 +35,9 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] private string phase3Dialogue = "페이즈 3이 활성화됩니다.";
     [SerializeField] private string phase4Dialogue = "지금 뭐하고 계시는 건가요?";
 
+    [Header("페이즈 시작시 등장")]
+    [SerializeField] private GameObject bossStart;
+
     [Space(10f)]
     [SerializeField] private TextMeshProUGUI timeText;
     private float timeFloat = 0f;
@@ -87,6 +90,7 @@ public class PhaseManager : MonoBehaviour
 
     IEnumerator PhaseRoutine(List<string> patternCombination, float transitionDelay, string dialogue)
     {
+        bossStart.SetActive(true);
         // 페이즈 대사 출력
         yield return StartCoroutine(typingEffect.DisplayTypingEffect(dialogue));
 

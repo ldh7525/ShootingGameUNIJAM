@@ -41,6 +41,10 @@ public class CameraShakeOnHit : MonoBehaviour
         {
             StartCoroutine(FlashScreen());
         }
+        else if (playerMove.playerHealth < 0)
+        {
+            StopCoroutine(FlashScreen());
+        }
     }
 
     private IEnumerator ShakeCamera()

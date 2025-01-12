@@ -5,8 +5,10 @@ using TMPro;
 public class TypingEffect : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textDisplay; // 출력할 TextMeshProUGUI
+    [SerializeField] private GameObject bossStart;
 
     public bool isTypingComplete;
+
     // 초성, 중성, 종성 정의
     private readonly char[] 초성 = { 'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
     private readonly char[] 중성 = { 'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ' };
@@ -38,6 +40,15 @@ public class TypingEffect : MonoBehaviour
                 yield return new WaitForSeconds(0.05f); // 대기 시간
             }
         }
+
+        if(bossStart != null)
+        {
+            yield return new WaitForSeconds(1f);
+            bossStart.SetActive(false);
+            textDisplay.text = "";
+        }
+
+        yield return new WaitForSeconds(2f);
         isTypingComplete = true;
     }
 
@@ -53,13 +64,13 @@ public class TypingEffect : MonoBehaviour
         // 단계 1: 초성 입력
         string tempText = prefix + 초성[초성Index];
         textDisplay.text = tempText;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
 
         // 단계 2: 초성 + 중성 입력
         char 초중성 = (char)(0xAC00 + 초성Index * 21 * 28 + 중성Index * 28);
         tempText = prefix + 초중성;
         textDisplay.text = tempText;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
 
         // 단계 3: 완성 글자 입력
         if (종성Index > 0)
