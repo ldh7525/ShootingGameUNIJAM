@@ -50,7 +50,7 @@ public class PhaseManager : MonoBehaviour
 
     void Start()
     {
-        
+        SoundManager.Instance.StageBgmOn();
         StartPhase(currentPhase);
     }
 
