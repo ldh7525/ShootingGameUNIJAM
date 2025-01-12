@@ -4358,6 +4358,7 @@ MonoBehaviour:
   stamina: {fileID: 255279063}
   gameOverPanel: {fileID: 2030248087}
   gameOverText: {fileID: 43737218}
+  gameOverImage: {fileID: 2131934801}
   dialoguePanel: {fileID: 0}
   dialogueText: {fileID: 0}
   camShake: {fileID: 2141286976}
@@ -4740,7 +4741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62415fdc0cb8b1840b1a9ed2b4ebd13b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPhase: 3
+  currentPhase: 0
   patternCombinationPhase1:
   - 1-1
   - 1-3

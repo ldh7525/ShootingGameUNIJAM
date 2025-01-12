@@ -14,34 +14,34 @@ public class TypingEffect : MonoBehaviour
     private readonly char[] 중성 = { 'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ' };
     private readonly char[] 종성 = { ' ', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ' };
 
+    private bool isSkipping = false; // 텍스트 스킵 여부
+
     void Start()
     {
-        // 예제 텍스트 설정
-        string text = "";
-        //StartCoroutine(DisplayTypingEffect(text));
         isTypingComplete = false;
     }
 
     public IEnumerator DisplayTypingEffect(string text)
     {
-        string displayedText = ""; // 누적된 출력 텍스트
+        isTypingComplete = false;
+        isSkipping = false;
+        string displayedText = "";
 
-        foreach (char c in text) // 한 글자씩 처리
+        foreach (char c in text)
         {
-            if (IsHangul(c)) // 한글인지 확인
+            if (Input.GetMouseButtonDown(0))
             {
-                yield return StartCoroutine(TypingHangul(c, displayedText));
-                displayedText += c; // 완성된 글자 누적
+                isSkipping = true;
+                textDisplay.text = text;
+                break;
             }
-            else
-            {
-                displayedText += c; // 비한글 문자 추가
-                textDisplay.text = displayedText;
-                yield return new WaitForSeconds(0.05f); // 대기 시간
-            }
+
+            displayedText += c;
+            textDisplay.text = displayedText;
+            yield return new WaitForSeconds(0.1f);
         }
 
-        if(bossStart != null)
+        if (bossStart != null && !isSkipping)
         {
             yield return new WaitForSeconds(1f);
             bossStart.SetActive(false);
@@ -50,6 +50,54 @@ public class TypingEffect : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
         isTypingComplete = true;
+    }
+
+    /// <summary>
+    /// 글자가 모두 출력된 후 마우스 클릭을 기다리는 코루틴
+    /// </summary>
+    public IEnumerator DisplayTypingEffectWithPause(string text)
+    {
+        isTypingComplete = false;
+        isSkipping = false;
+        string displayedText = "";
+
+        foreach (char c in text)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                isSkipping = true;
+                textDisplay.text = text;
+                break;
+            }
+
+            displayedText += c;
+            textDisplay.text = displayedText;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // 마우스 클릭을 기다림
+        yield return StartCoroutine(WaitForMouseClick());
+
+        if (bossStart != null && !isSkipping)
+        {
+            yield return new WaitForSeconds(1f);
+            bossStart.SetActive(false);
+            textDisplay.text = "";
+        }
+
+        isTypingComplete = true;
+    }
+
+    private IEnumerator WaitForMouseClick()
+    {
+        Debug.Log("마우스 클릭을 기다리는 중...");
+
+        while (!Input.GetMouseButtonDown(0))
+        {
+            yield return null;
+        }
+
+        Debug.Log("마우스 클릭 감지!");
     }
 
     IEnumerator TypingHangul(char targetChar, string prefix)
@@ -75,19 +123,17 @@ public class TypingEffect : MonoBehaviour
         // 단계 3: 완성 글자 입력
         if (종성Index > 0)
         {
-            // 종성이 있는 경우
             char 완성글자 = (char)(0xAC00 + 초성Index * 21 * 28 + 중성Index * 28 + 종성Index);
             tempText = prefix + 완성글자;
             textDisplay.text = tempText;
         }
         else
         {
-            // 종성이 없는 경우, 초중성 상태 그대로 유지
             tempText = prefix + 초중성;
             textDisplay.text = tempText;
         }
 
-        yield return new WaitForSeconds(0.05f); // 마지막 단계 대기 시간
+        yield return new WaitForSeconds(0.05f);
     }
 
     // 한글 여부 확인

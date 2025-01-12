@@ -84,6 +84,7 @@ public class PhaseManager : MonoBehaviour
                 StartCoroutine(PhaseRoutine(patternCombinationPhase4, phase4TransitionDelay, phase4Dialogue));
                 break;
             case GamePhase.Phase5:
+                gameManager.isGameClear = true;
                 break;
         }
     }

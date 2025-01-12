@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using static PhaseManager;
 
 public class UIManager : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class UIManager : MonoBehaviour
     [Header ("특정 상황에 사용")]
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TextMeshProUGUI gameOverText;
+    [SerializeField] private GameObject gameOverImage;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private CameraShakeOnHit camShake;
@@ -81,7 +83,7 @@ public class UIManager : MonoBehaviour
         StartButton.SetActive(false);
         StartPanel.SetActive(true);
         StartText.SetActive(true);
-        StartCoroutine(te.DisplayTypingEffect(openingScript));
+        StartCoroutine(te.DisplayTypingEffectWithPause(openingScript));
     }
 
     public void StageStart()
@@ -146,17 +148,35 @@ public class UIManager : MonoBehaviour
 
     IEnumerator FadeTime()
     {
-        yield return new WaitForSecondsRealtime(5f);
+        yield return new WaitForSecondsRealtime(3f);
 
         if (gameManager.GetComponent<GameManager>().isGameEnd)
         {
             gameOverPanel.SetActive(true);
             gameOverText.text = "Game Over";
+            GamePhase currentPhase = GameObject.Find("PhaseManager").GetComponent<PhaseManager>().currentPhase;
+            switch(currentPhase)
+            {
+                case GamePhase.Phase1:
+                    gameOverImage.GetComponent<Image>().sprite = Resources.Load<Sprite>($"Sprites/Character/Detail/Boss1");
+                    break;
+                case GamePhase.Phase2:
+                    gameOverImage.GetComponent<Image>().sprite = Resources.Load<Sprite>($"Sprites/Character/Detail/Boss2");
+                    break;
+                case GamePhase.Phase3:
+                    gameOverImage.GetComponent<Image>().sprite = Resources.Load<Sprite>($"Sprites/Character/Detail/Boss3");
+                    break;
+                case GamePhase.Phase4:
+                    gameOverImage.GetComponent<Image>().sprite = Resources.Load<Sprite>($"Sprites/Character/Detail/Boss4");
+                    break;
+            }
+            
         }
         else if (gameManager.GetComponent<GameManager>().isGameClear)
         {
             gameOverPanel.SetActive(true);
             gameOverText.text = "Game Clear";
+            gameOverImage.GetComponent<Image>().sprite = Resources.Load<Sprite>($"img/ending_img");
         }
         camShake.StopAllCoroutines();
         fade.StartFadeIn();
