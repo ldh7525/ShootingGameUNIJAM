@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour
         {
             //ToggleDialogue("��ȭâ�� ��Ÿ�����ϴ�!");
         }
-        if(isOpening && Input.GetKeyUp(KeyCode.Escape))
+        if(isOpening && Input.GetKeyUp(KeyCode.Space))
         {
             StageStart();
             isOpening = false;
@@ -91,6 +91,7 @@ public class UIManager : MonoBehaviour
         StartPanel.SetActive(true);
         StartText.SetActive(true);
         StartCoroutine(te.DisplayTypingEffectWithPause(openingScript));
+        StageStart();
     }
 
     public void StageStart()

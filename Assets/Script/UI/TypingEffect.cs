@@ -94,7 +94,7 @@ public class TypingEffect : MonoBehaviour
 
         float elapsedTime = 0f;
 
-        while (!Input.GetMouseButtonDown(0) && elapsedTime < timeout)
+        while (!Input.GetKeyDown(KeyCode.Space) && elapsedTime < timeout)
         {
             elapsedTime += Time.deltaTime;
             yield return null;
