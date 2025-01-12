@@ -8,11 +8,11 @@ using static PhaseManager;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("½ÃÀÛ ½ºÅ©¸³Æ®¿ë")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½")]
     [SerializeField] private GameObject StartPanel;
     [SerializeField] private GameObject StartText;
     // On on Start
-    [Header ("½ºÅ×ÀÌÁö ½ÃÀÛ½Ã Ç×»ó È°¼ºÈ­")]
+    [Header ("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û½ï¿½ ï¿½×»ï¿½ È°ï¿½ï¿½È­")]
     [SerializeField] private GameObject StartButton;
     [SerializeField] private GameObject pauseButton;
     [SerializeField] private GameObject pauseMenu;
@@ -20,7 +20,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject stamina;
 
     // Not Always On
-    [Header ("Æ¯Á¤ »óÈ²¿¡ »ç¿ë")]
+    [Header ("Æ¯ï¿½ï¿½ ï¿½ï¿½È²ï¿½ï¿½ ï¿½ï¿½ï¿½")]
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private GameObject gameOverImage;
@@ -29,36 +29,52 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CameraShakeOnHit camShake;
 
     //Manager
-    [Header("¸Å´ÏÀú")]
+    [Header("ï¿½Å´ï¿½ï¿½ï¿½")]
     [SerializeField] private GameObject phaseManager;
     [SerializeField] private GameObject spawbManager;
     [SerializeField] private GameObject gameManager;
     [SerializeField] private GameObject player;
 
-    [Header ("º¯¼ö")]
-    [SerializeField] private bool isDialogueActive = false; // ´ëÈ­Ã¢ È°¼ºÈ­ ¿©ºÎ
+    [Header ("ï¿½ï¿½ï¿½ï¿½")]
+    [SerializeField] private bool isDialogueActive = false; // ï¿½ï¿½È­Ã¢ È°ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½
     [SerializeField] private bool isPaused = true;
 
-    [Header("¿ÀÇÁ´× ½ºÅ©¸³Æ®")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®")]
     [SerializeField] private string openingScript;
 
     private FadeController fade;
     private TypingEffect te;
-    private bool isOpening;
+    public bool isOpening;
     private void Start()
     {
-        
+        // ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½Ã·ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ù°ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½ trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (!PlayerPrefs.HasKey("IsOpening"))
+        {
+            PlayerPrefs.SetInt("IsOpening", 1); // ï¿½âº»ï¿½ï¿½ true
+            PlayerPrefs.Save();
+        }
+        isOpening = PlayerPrefs.GetInt("IsOpening", 1) == 1;
+        if (dialoguePanel != null)
+        {
+            dialogueText = dialoguePanel.GetComponentInChildren<TextMeshProUGUI>();
+        }
         Time.timeScale = 1f;
         fade = GetComponent<FadeController>();
         te = GetComponent<TypingEffect>();
+
+        if(!isOpening)
+        {
+            StartButton.SetActive(false);
+            StageStart();
+        }
     }
 
     void Update()
     {
-        // ¿¹½Ã: ½ºÆäÀÌ½º¹Ù¸¦ ´­·¯ ´ëÈ­Ã¢ È°¼ºÈ­/ºñÈ°¼ºÈ­
+        // ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­Ã¢ È°ï¿½ï¿½È­/ï¿½ï¿½È°ï¿½ï¿½È­
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //ToggleDialogue("´ëÈ­Ã¢ÀÌ ³ªÅ¸³µ½À´Ï´Ù!");
+            //ToggleDialogue("ï¿½ï¿½È­Ã¢ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
         }
         if(isOpening && Input.GetKeyUp(KeyCode.Escape))
         {
@@ -68,6 +84,7 @@ public class UIManager : MonoBehaviour
         if(isOpening && te.isTypingComplete)
         {
             StageStart();
+            isOpening = false;
         }
 
 
@@ -76,7 +93,6 @@ public class UIManager : MonoBehaviour
 
     public void GameStart()
     {
-        isOpening = true;
         StartButton.SetActive(false);
         StartPanel.SetActive(true);
         StartText.SetActive(true);
@@ -85,6 +101,7 @@ public class UIManager : MonoBehaviour
 
     public void StageStart()
     {
+        isOpening = false;
         StartPanel.SetActive(false);
         player.SetActive(true);
         phaseManager.SetActive(true);
@@ -94,7 +111,7 @@ public class UIManager : MonoBehaviour
         stamina.SetActive(true);
     }
 
-    // ´ëÈ­Ã¢ Åä±Û ¸Þ¼­µå
+    // ï¿½ï¿½È­Ã¢ ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
 /*    public void ToggleDialogue(string message)
     {
         if (dialoguePanel == null) return;
@@ -104,7 +121,7 @@ public class UIManager : MonoBehaviour
 
         if (isDialogueActive && dialogueText != null)
         {
-            // ÅØ½ºÆ® ¹× ÀÌ¹ÌÁö ¼³Á¤
+            // ï¿½Ø½ï¿½Æ® ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             dialogueText.text = message;
         }
     }*/
@@ -114,10 +131,11 @@ public class UIManager : MonoBehaviour
 
         if (pauseMenu != null) pauseMenu.SetActive(isPaused);
 
-        Time.timeScale = isPaused ? 0f : 1f; // ½Ã°£ Á¶Á¤
+        Time.timeScale = isPaused ? 0f : 1f; // ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
     public void ReloadScene()
     {
+        PlayerPrefs.SetInt("IsOpening", 0);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void Pause()
@@ -178,5 +196,12 @@ public class UIManager : MonoBehaviour
         camShake.StopAllCoroutines();
         fade.StartFadeIn();
     }
-    
+    private void OnApplicationQuit()
+    {
+        // ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½Ã·ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ isOpening ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+        PlayerPrefs.SetInt("IsOpening", 1);
+        PlayerPrefs.Save();
+    }
+
+
 }

@@ -99,6 +99,7 @@ public class PhaseManager : MonoBehaviour
 
         foreach (string pattern in patternCombination)
         {
+            int count = 0;
             string[] splitPatterns = pattern.Split('/');
             List<Coroutine> coroutines = new List<Coroutine>();
 
@@ -110,6 +111,15 @@ public class PhaseManager : MonoBehaviour
             foreach (Coroutine coroutine in coroutines)
             {
                 yield return coroutine;
+            }
+            count++;
+            if(count == 2)
+            {
+                //여기에 패널이랑 텍스트 받아와서 대사 입력
+            }
+            else if (count == 4)
+            {
+
             }
         }
 

@@ -75,8 +75,8 @@ public class TypingEffect : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        // 마우스 클릭을 기다림
-        yield return StartCoroutine(WaitForMouseClick());
+        // 마우스 클릭 또는 5초 타임아웃을 기다림
+        yield return StartCoroutine(WaitForMouseClickOrTimeout());
 
         if (bossStart != null && !isSkipping)
         {
@@ -86,6 +86,28 @@ public class TypingEffect : MonoBehaviour
         }
 
         isTypingComplete = true;
+    }
+
+    private IEnumerator WaitForMouseClickOrTimeout(float timeout = 3f)
+    {
+        Debug.Log("마우스 클릭 또는 5초 대기를 시작합니다...");
+
+        float elapsedTime = 0f;
+
+        while (!Input.GetMouseButtonDown(0) && elapsedTime < timeout)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("마우스 클릭 감지!");
+        }
+        else
+        {
+            Debug.Log("5초 타임아웃!");
+        }
     }
 
     private IEnumerator WaitForMouseClick()
@@ -141,4 +163,5 @@ public class TypingEffect : MonoBehaviour
     {
         return c >= 0xAC00 && c <= 0xD7A3;
     }
+
 }
