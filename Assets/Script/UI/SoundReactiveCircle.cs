@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class SoundReactiveCircle : MonoBehaviour
 {
-    private AudioSource audioSource;
+    [SerializeField] private GameObject audioSource;
     public float sensitivity = 100f;  // 조정 가능한 민감도
     public float scaleMultiplier = 1f;  // 크기 확대 비율
     private float[] spectrumData = new float[64];  // 오디오 스펙트럼 데이터 배열
@@ -14,13 +14,13 @@ public class SoundReactiveCircle : MonoBehaviour
 
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GameObject.Find("SoundManager");
     }
 
     void Update()
     {
         // 스펙트럼 데이터 가져오기
-        audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
+        audioSource.GetComponent<AudioSource>().GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
 
         // 특정 주파수 대역 데이터를 사용하여 원의 크기 변경
         float bassValue = spectrumData[1] * sensitivity;
