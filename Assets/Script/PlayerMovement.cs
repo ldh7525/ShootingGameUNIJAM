@@ -96,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Boost()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isBoosting && movement != Vector2.zero && stamina > 20)
+        if (Input.GetKeyDown(KeyCode.Space) && !isBoosting && movement != Vector2.zero && stamina > 20)
         {
             stamina -= 20;
             StartCoroutine(ApplyBoost());
@@ -109,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (stamina < maxStamina)
             {
-                stamina = stamina + Time.deltaTime * 2;
+                stamina = stamina + Time.deltaTime * 3;
             }
             yield return null;
         }

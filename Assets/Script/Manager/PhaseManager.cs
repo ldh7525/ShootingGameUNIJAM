@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -37,7 +38,9 @@ public class PhaseManager : MonoBehaviour
 
     [Header("페이즈 시작시 등장")]
     [SerializeField] private GameObject bossStart;
+    [SerializeField] private GameObject bosstalk;
     [SerializeField] private GameObject textBox;
+    private TextMeshProUGUI textBoxText;
 
     [Space(10f)]
     [SerializeField] private TextMeshProUGUI timeText;
@@ -49,9 +52,19 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] private Boss3 Boss3;
     [SerializeField] private Boss4 Boss4;
 
+    [SerializeField] private string boss1Script1;
+    [SerializeField] private string boss1Script2;
+    [SerializeField] private string boss2Script1;
+    [SerializeField] private string boss2Script2;
+    [SerializeField] private string boss3Script1;
+    [SerializeField] private string boss3Script2;
+    [SerializeField] private string boss4Script1;
+    [SerializeField] private string boss4Script2;
+
     void Start()
     {
         SoundManager.Instance.StageBgmOn();
+        textBoxText = textBox.GetComponentInChildren<TextMeshProUGUI>();
         StartPhase(currentPhase);
     }
 
@@ -92,6 +105,7 @@ public class PhaseManager : MonoBehaviour
 
     IEnumerator PhaseRoutine(List<string> patternCombination, float transitionDelay, string dialogue)
     {
+        int count = 0;
         textBox.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -420);
         bossStart.SetActive(true);
         // 페이즈 대사 출력
@@ -99,7 +113,16 @@ public class PhaseManager : MonoBehaviour
 
         foreach (string pattern in patternCombination)
         {
-            int count = 0;
+            if (count == 2)
+            {
+                textBox.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 380);
+                StartCoroutine(EnemyTalkController(count));
+            }
+            else if (count == 4)
+            {
+                textBox.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 380);
+                StartCoroutine(EnemyTalkController(count));
+            }
             string[] splitPatterns = pattern.Split('/');
             List<Coroutine> coroutines = new List<Coroutine>();
 
@@ -113,14 +136,6 @@ public class PhaseManager : MonoBehaviour
                 yield return coroutine;
             }
             count++;
-            if(count == 2)
-            {
-                //여기에 패널이랑 텍스트 받아와서 대사 입력
-            }
-            else if (count == 4)
-            {
-
-            }
         }
 
         Debug.Log($"{currentPhase} 완료!");
@@ -137,6 +152,48 @@ public class PhaseManager : MonoBehaviour
         {
             gameManager.isGameClear = true;
         }
+    }
+
+    IEnumerator EnemyTalkController(int count)
+    {
+        switch(currentPhase)
+        {
+            case GamePhase.Phase1:
+                bosstalk.GetComponent<Image>().sprite = Resources.Load<Sprite>($"Sprites/Character/Detail/Boss1");
+                if (count == 2)
+                    textBoxText.GetComponent<TextMeshProUGUI>().text = boss1Script1;
+                else if (count == 4)
+                    textBoxText.GetComponent<TextMeshProUGUI>().text = boss1Script2;
+                break;
+            case GamePhase.Phase2:
+                bosstalk.GetComponent<Image>().sprite = Resources.Load<Sprite>($"Sprites/Character/Detail/Boss2");
+                if (count == 2)
+                    textBoxText.GetComponent<TextMeshProUGUI>().text = boss2Script1;
+                else if (count == 4)
+                    textBoxText.GetComponent<TextMeshProUGUI>().text = boss2Script2;
+                break;
+            case GamePhase.Phase3:
+                bosstalk.GetComponent<Image>().sprite = Resources.Load<Sprite>($"Sprites/Character/Detail/Boss3");
+                if (count == 2)
+                    textBoxText.GetComponent<TextMeshProUGUI>().text = boss3Script1;
+                else if (count == 4)
+                    textBoxText.GetComponent<TextMeshProUGUI>().text = boss3Script2;
+                break;
+            case GamePhase.Phase4:
+                bosstalk.GetComponent<Image>().sprite = Resources.Load<Sprite>($"Sprites/Character/Detail/Boss4");
+                if (count == 2)
+                    textBoxText.GetComponent<TextMeshProUGUI>().text = boss4Script1;
+                else if (count == 4)
+                    textBoxText.GetComponent<TextMeshProUGUI>().text = boss4Script2;
+                break;
+        }
+        bosstalk.SetActive(true);
+        textBox.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        bosstalk.SetActive(false);
+        textBox.SetActive(false);
     }
 
     IEnumerator ExecutePattern(string pattern)

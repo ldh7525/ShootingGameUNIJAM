@@ -24,8 +24,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private GameObject gameOverImage;
-    //[SerializeField] private GameObject dialoguePanel;
-    //[SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private CameraShakeOnHit camShake;
 
     //Manager
@@ -54,10 +52,6 @@ public class UIManager : MonoBehaviour
             PlayerPrefs.Save();
         }
         isOpening = PlayerPrefs.GetInt("IsOpening", 1) == 1;
-        if (dialoguePanel != null)
-        {
-            dialogueText = dialoguePanel.GetComponentInChildren<TextMeshProUGUI>();
-        }
         Time.timeScale = 1f;
         fade = GetComponent<FadeController>();
         te = GetComponent<TypingEffect>();
