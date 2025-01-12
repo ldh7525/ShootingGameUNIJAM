@@ -4899,7 +4899,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: A Novice Guild
+  m_text: "\uD53C\uD560 \uC218 \uC5C6\uC73C\uBA74 \uC8FD\uC5B4\uB77C!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b9e8170de8d685f4b9f97b002ab51efa, type: 2}
   m_sharedMaterial: {fileID: 4584807201174658576, guid: b9e8170de8d685f4b9f97b002ab51efa, type: 2}
