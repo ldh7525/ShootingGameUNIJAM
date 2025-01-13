@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using static PhaseManager;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -29,7 +30,6 @@ public class UIManager : MonoBehaviour
     //Manager
     [Header("�Ŵ���")]
     [SerializeField] private GameObject phaseManager;
-    [SerializeField] private GameObject spawbManager;
     [SerializeField] private GameObject gameManager;
     [SerializeField] private GameObject player;
 
@@ -37,51 +37,30 @@ public class UIManager : MonoBehaviour
     [SerializeField] private bool isDialogueActive = false; // ��ȭâ Ȱ��ȭ ����
     [SerializeField] private bool isPaused = true;
 
-    [Header("������ ��ũ��Ʈ")]
-    [SerializeField] private string openingScript;
-
     private FadeController fade;
     private TypingEffect te;
     public bool isOpening;
     private void Start()
     {
-        // ����Ƽ �÷��̰� �����ٰ� �ٽ� ������ ���� �⺻���� true�� ����
+        Time.timeScale = 1f;
+        fade = GetComponent<FadeController>();
+        te = GetComponent<TypingEffect>();
         if (!PlayerPrefs.HasKey("IsOpening"))
         {
             PlayerPrefs.SetInt("IsOpening", 1); // �⺻�� true
             PlayerPrefs.Save();
         }
         isOpening = PlayerPrefs.GetInt("IsOpening", 1) == 1;
-        Time.timeScale = 1f;
-        fade = GetComponent<FadeController>();
-        te = GetComponent<TypingEffect>();
-
-        if(!isOpening)
+        if (!isOpening)
         {
             StartButton.SetActive(false);
             StageStart();
         }
+        
     }
 
     void Update()
     {
-        // ����: �����̽��ٸ� ���� ��ȭâ Ȱ��ȭ/��Ȱ��ȭ
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            //ToggleDialogue("��ȭâ�� ��Ÿ�����ϴ�!");
-        }
-        if(isOpening && Input.GetKeyUp(KeyCode.Space))
-        {
-            StageStart();
-            isOpening = false;
-        }
-        if(isOpening && te.isTypingComplete)
-        {
-            StageStart();
-            isOpening = false;
-        }
-
-
         IsOver();
     }
 
@@ -90,7 +69,6 @@ public class UIManager : MonoBehaviour
         StartButton.SetActive(false);
         StartPanel.SetActive(true);
         StartText.SetActive(true);
-        StartCoroutine(te.DisplayTypingEffectWithPause(openingScript));
         StageStart();
     }
 
@@ -100,26 +78,10 @@ public class UIManager : MonoBehaviour
         StartPanel.SetActive(false);
         player.SetActive(true);
         phaseManager.SetActive(true);
-        spawbManager.SetActive(true);
         pauseButton.SetActive(true);
         heart.SetActive(true);
         stamina.SetActive(true);
     }
-
-    // ��ȭâ ��� �޼���
-/*    public void ToggleDialogue(string message)
-    {
-        if (dialoguePanel == null) return;
-
-        isDialogueActive = !isDialogueActive;
-        dialoguePanel.SetActive(isDialogueActive);
-
-        if (isDialogueActive && dialogueText != null)
-        {
-            // �ؽ�Ʈ �� �̹��� ����
-            dialogueText.text = message;
-        }
-    }*/
     public void TogglePause()
     {
         isPaused = !isPaused;
@@ -164,6 +126,7 @@ public class UIManager : MonoBehaviour
         {
             gameOverPanel.SetActive(true);
             gameOverText.text = "Game Over";
+            phaseManager.GetComponent<PhaseManager>().bosstalk.SetActive(false);
             GamePhase currentPhase = GameObject.Find("PhaseManager").GetComponent<PhaseManager>().currentPhase;
             switch(currentPhase)
             {
